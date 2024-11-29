@@ -1,0 +1,52 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+version: '3.6'
+networks:
+ backend:
+    driver: bridge
+
+services:
+
+  eshop:
+    container_name: eshop
+    image: eshop
+    depends_on:
+      - eshopdb
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 5010:5010
+      
+    environment:
+       - ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection}
+       - ASPNETCORE_URLS=${AspnetCoreUrl}
+       - JWT__Key=${JWT__Key} 
+       - JWT__Issuer=${JWT__Issuer}
+       - JWT__Audience=${JWT__Audience}
+       - Admin__FirstName=${Admin__FirstName}
+       - Admin__LastName=${Admin__LastName}
+       - Admin__Email=${Admin__Email}
+       - Admin__UserName=${Admin__UserName}
+       - Admin__Refreshtoken=${Admin__Refreshtoken}
+       - Admin__Password=${Admin__Password}
+       - Admin__Id=${Admin__Id}
+    networks:
+      - backend
+
+  eshopdb:
+     container_name: eshopdb
+     image: postgres:16.3-alpine
+     restart: always
+     ports:
+        - 5432:5432
+     environment:
+          - POSTGRES_USER=${POSTGRES_USER}
+          - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+          - POSTGRES_DB= ${POSTGRES_DB}
+     networks:
+        - backend
+     volumes:
+        - eshopdb_data:/var/lib/postgresql/data/
+volumes:
+  eshopdb_data: {}
