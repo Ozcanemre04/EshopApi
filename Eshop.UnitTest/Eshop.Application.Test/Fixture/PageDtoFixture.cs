@@ -13,7 +13,7 @@ namespace Eshop.Application.Test.Fixture
             return new PageDto<ProductDtoResponse>{
                 PageNumber=1,
                 PageSize=10,
-                TotalPages=ProductDtoFixture.getAllProducts().Count()/ 10,
+                TotalPages= (int)Math.Ceiling(ProductDtoFixture.getAllProducts().Count()/ (double)10),
                 TotalRecords=ProductDtoFixture.getAllProducts().Count(),
                 Data = ProductDtoFixture.getAllProducts(),
             };

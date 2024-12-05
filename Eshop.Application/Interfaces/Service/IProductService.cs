@@ -11,7 +11,7 @@ namespace Eshop.Application.Interfaces.Service
     public interface IProductService
     {
         
-        Task<PageDto<ProductDtoResponse>> GetAllProductAsync(int pageNumber, int pageSize);
+        Task<PageDto<ProductDtoResponse>> GetAllProductAsync(int pageNumber, int pageSize,string category);
         Task<ProductDtoResponse> GetOneProductAsync(long id);
         Task<ProductDtoResponse> CreateProductAsync(ProductDtoCreateRequest productDtoCreateRequest);
         Task<string> DeleteProductAsync(long id);

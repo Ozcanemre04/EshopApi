@@ -15,9 +15,9 @@ namespace Eshop.Infrastructure.Repository
         {
         }
 
-        public async Task<int> Count()
+        public async Task<int> Count(string category)
         {
-            return await _appDbContext.Products.CountAsync();
+            return await _appDbContext.Products.Where(x=> category=="All" || x.category.CategoryName == category).CountAsync();
         }
 
         public async Task<Product> CreateAsync(Product product)
@@ -40,9 +40,10 @@ namespace Eshop.Infrastructure.Repository
 
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<Product>> GetAllAsync(int pageNumber, int pageSize,string category)
         {
-            return await _appDbContext.Products.Skip((pageNumber - 1) * pageSize).Take(pageSize).Include(x => x.category).ToListAsync();
+            return await _appDbContext.Products.Where(x=> category=="All" || x.category.CategoryName == category)
+            .Skip((pageNumber - 1) * pageSize).Take(pageSize).Include(x => x.category).OrderBy(x=>x.Id).ToListAsync();
         }
 
         public async Task<Product> GetOneAsync(long id)

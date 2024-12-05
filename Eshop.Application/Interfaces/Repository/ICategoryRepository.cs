@@ -10,6 +10,7 @@ namespace Eshop.Application.Interfaces.Repository
     {
         Task<IEnumerable<Category>> GetAllAsync();
         Task<Category> GetOneAsync(long id);
+        Task<Category> GetOneByNameAsync(string category);
         Task<Category> CreateAsync(Category category);
         Task<bool> DeleteAsync(long id);
         Task<Category> UpdateAsync(Category category);

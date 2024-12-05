@@ -16,7 +16,7 @@ namespace Eshop.Domain.Entities
         public required string Image { get; set; }
         [ForeignKey("Category")]
         public required long CategoryId { get; set; }
-        public required Category category;
+        public Category? category;
         public ICollection<BasketProduct>? BasketProducts { get; set; }
         public ICollection<Review>? Reviews{ get; set; }
     }

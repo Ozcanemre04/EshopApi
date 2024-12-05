@@ -67,25 +67,8 @@ namespace Eshop.Infrastructure.Data
                 UserId = _config.GetSection("Admin:Id").Value
             });
 
-            modelBuilder.Entity<Category>().HasData(
-                new Category {
-                    Id = 1,
-                    CategoryName = "Men's clothing"
-                },
-                new Category {
-                    Id = 2,
-                    CategoryName = "Women's clothing"
-                },
-                new Category {
-                    Id = 3,
-                    CategoryName = "jewelery"
-                },
-                new Category {
-                    Id = 4,
-                    CategoryName = "electronics"
-                }
-                
-            );
+            modelBuilder.Entity<Category>().HasData(CategoryData.CategoriesList());
+            modelBuilder.Entity<Product>().HasData(ProductData.ProductsList());
 
             modelBuilder.Entity<Category>()
                         .HasMany<Product>(p => p.Products)

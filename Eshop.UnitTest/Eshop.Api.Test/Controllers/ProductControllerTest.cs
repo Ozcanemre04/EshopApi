@@ -27,22 +27,72 @@ namespace Eshop.Api.Test.Controllers
         }
         //getAllProduct
         [Fact]
-        public async void GetAllProduct_ReturnsOKResult_WithProducts()
+        public async void GetAllProduct_ReturnsOKResult_WithAllProducts()
         {
             //arrange
-            _productService.Setup(t => t.GetAllProductAsync(1, 20)).ReturnsAsync(PageDtoFixture.pageDtoFixture());
-
+            var categoryName = "All";
+            var productList = ProductDtoFixture.getAllProducts().Where(x=>x.CategoryName == categoryName);
+            _productService.Setup(t => t.GetAllProductAsync(1, 10,categoryName)).ReturnsAsync(PageDtoFixture.pageDtoFixture());
             //act
-            var response = await _productController.GetAllProducts(1, 20);
+            var response = await _productController.GetAllProducts(1, 10,categoryName);
+            //assert
+            var okResult = Assert.IsType<OkObjectResult>(response.Result);
+            var returnValue = Assert.IsType<PageDto<ProductDtoResponse>>(okResult.Value);
+            Assert.NotNull(returnValue);
+            Assert.IsType<ProductDtoResponse>(returnValue.Data.First());
+            Assert.Equal(3, returnValue.Data.Count());
+            Assert.Equal(1, returnValue.PageNumber);
+            Assert.Equal(10, returnValue.PageSize);
+            Assert.Equal(1, returnValue.TotalPages);
+            
 
+        }
+        [Fact]
+        public async void GetAllProduct_ReturnsOKResult_WithProductsWithSmartphoneCategory()
+        {
+            //arrange
+            var categoryName = "Smartphone";
+            var productList = ProductDtoFixture.getAllProducts().Where(x=>x.CategoryName == categoryName);
+            var updatedDataInPageDto = PageDtoFixture.pageDtoFixture();
+            updatedDataInPageDto.Data = productList;
+            updatedDataInPageDto.TotalRecords = productList.Count();
+            updatedDataInPageDto.TotalPages = (int)Math.Ceiling(productList.Count()/(double)20);
+            _productService.Setup(t => t.GetAllProductAsync(1, 20,categoryName)).ReturnsAsync(updatedDataInPageDto);
+            //act
+            var response = await _productController.GetAllProducts(1, 20,categoryName);
             //assert
             var okResult = Assert.IsType<OkObjectResult>(response.Result);
             var returnValue = Assert.IsType<PageDto<ProductDtoResponse>>(okResult.Value);
             Assert.NotNull(returnValue);
             Assert.IsType<ProductDtoResponse>(returnValue.Data.First());
             Assert.Equal(2, returnValue.Data.Count());
+            Assert.Equal(2, returnValue.TotalRecords);
             Assert.Equal(1, returnValue.PageNumber);
             Assert.Equal(10, returnValue.PageSize);
+            Assert.Equal(1, returnValue.TotalPages);
+        }
+        [Fact]
+        public async void GetAllProduct_ReturnsOKResult_WithNoProducts()
+        {
+            //arrange
+            var categoryName = "hello";
+            var productList = ProductDtoFixture.getAllProducts().Where(x=>x.CategoryName == categoryName);
+            var updatedDataInPageDto = PageDtoFixture.pageDtoFixture();
+            updatedDataInPageDto.Data = productList;
+            updatedDataInPageDto.TotalRecords = productList.Count(); 
+            updatedDataInPageDto.TotalPages = (int)Math.Ceiling(productList.Count()/(double)20);
+            _productService.Setup(t => t.GetAllProductAsync(1, 20,categoryName)).ReturnsAsync(updatedDataInPageDto);
+            //act
+            var response = await _productController.GetAllProducts(1, 20,categoryName);
+            //assert
+            var okResult = Assert.IsType<OkObjectResult>(response.Result);
+            var returnValue = Assert.IsType<PageDto<ProductDtoResponse>>(okResult.Value);
+            Assert.NotNull(returnValue);
+            Assert.Equal(0, returnValue.Data.Count());
+            Assert.Equal(0, returnValue.TotalRecords);
+            Assert.Equal(1, returnValue.PageNumber);
+            Assert.Equal(10, returnValue.PageSize);
+            Assert.Equal(0, returnValue.TotalPages);
         }
         //getOneProduct
         [Fact]

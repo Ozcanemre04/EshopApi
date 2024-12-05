@@ -51,9 +51,8 @@ namespace Eshop.Infrastructure.Test.Repository
             Assert.IsType<Category>(result);
             Assert.Equal(categories.First().CategoryName, result.CategoryName);
             Assert.Equal(categories.First().Id, result.Id);
-           
-
         }
+        
         [Fact]
         public async Task GetOneAsync_ShouldReturnNullIfNotFound()
         {
@@ -67,6 +66,36 @@ namespace Eshop.Infrastructure.Test.Repository
             // asssert
             Assert.Null(result);
         }
+        [Fact]
+        public async Task GetOneByNameAsync_ShouldReturnOneCategoryByName()
+        {
+            // arrange 
+            var categoryName = "Smartphone";
+            var categories = CategoryFixture.CategoryList();
+            _context.Setup(p => p.Categories).ReturnsDbSet(categories);
+            var categoryrepository = new CategoryRepository(_context.Object);
+            // act
+            var result = await categoryrepository.GetOneByNameAsync(categoryName);
+            // asssert
+            Assert.NotNull(result);
+            Assert.IsType<Category>(result);
+            Assert.Equal(categories.First().CategoryName, result.CategoryName);
+            Assert.Equal(categories.First().Id, result.Id);
+        }
+        [Fact]
+        public async Task GetOneByNameAsync_ShouldReturnNullIfNotFound()
+        {
+            // arrange 
+            var categoryName = "nothing";
+            var categories = CategoryFixture.CategoryList();
+            _context.Setup(p => p.Categories).ReturnsDbSet(categories);
+            var categoryrepository = new CategoryRepository(_context.Object);
+            // act
+            var result = await categoryrepository.GetOneByNameAsync(categoryName);
+            // asssert
+            Assert.Null(result);
+        }
+
         [Fact]
         public async Task DeleteAsync_ShouldRemoveCategory()
         {

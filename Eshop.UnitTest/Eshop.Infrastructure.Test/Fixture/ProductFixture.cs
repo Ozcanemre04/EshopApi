@@ -34,6 +34,17 @@ namespace Eshop.Infrastructure.Test.Fixture
                     CreatedDate = DateTime.Now,
                     Image ="hello",
                     category=CategoryFixture.CategoryList().First(),
+                },
+                new Product {
+                    Id = 3,
+                    Name = "samsung",
+                    Description = "This is a fantastic product you should buy.",
+                    Price = 235.43m,
+                    Stock = 10,
+                    CategoryId = 1,
+                    CreatedDate = DateTime.Now,
+                    Image ="hello",
+                    category=CategoryFixture.CategoryList().Last(),
                 }
              };
         }

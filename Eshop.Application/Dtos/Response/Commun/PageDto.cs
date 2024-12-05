@@ -7,10 +7,10 @@ namespace Eshop.Application.Dtos.Response.Commun
 {
     public class PageDto<T>
     {
-       public int PageNumber { get; init; }
-       public int PageSize { get; init; }
-       public int TotalPages { get; init; }
-       public int TotalRecords { get; init; }
-       public IEnumerable<T>? Data { get; init; }
+       public int PageNumber { get; set; }
+       public int PageSize { get; set; }
+       public int TotalPages { get; set; }
+       public int TotalRecords { get; set; }
+       public IEnumerable<T>? Data { get; set; }
     }
 }

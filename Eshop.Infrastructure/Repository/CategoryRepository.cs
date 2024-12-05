@@ -44,6 +44,10 @@ namespace Eshop.Infrastructure.Repository
         {
             return await _appDbContext.Categories.FirstOrDefaultAsync(x => x.Id == id);
         }
+        public async Task<Category> GetOneByNameAsync(string name)
+        {
+            return await _appDbContext.Categories.FirstOrDefaultAsync(x => x.CategoryName == name);
+        }
 
         public async Task<Category> UpdateAsync(Category category)
         {

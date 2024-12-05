@@ -22,20 +22,47 @@ namespace Eshop.Infrastructure.Test.Repository
             _context = new Mock<AppDbContext>();
         }
         [Fact]
-        public async Task Count_ShouldReturnCorrectCount()
+        public async Task Count_ShouldReturnCorrectCount_WhenCategoryNameIsAll()
         {
-            // arrange 
+            // arrange
+             var categoryName = "All";
             _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
             var productrepository = new ProductRepository(_context.Object);
             // act
-            var result = await productrepository.Count();
+            var result = await productrepository.Count(categoryName);
+            // asssert
+            Assert.NotNull(result);
+            Assert.Equal(3, result);
+        }
+        [Fact]
+        public async Task Count_ShouldReturnCorrectCount_WhenCategoryNameIsSmartphone()
+        {
+            // arrange
+             var categoryName = "Smartphone";
+            _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
+            var productrepository = new ProductRepository(_context.Object);
+            // act
+            var result = await productrepository.Count(categoryName);
             // asssert
             Assert.NotNull(result);
             Assert.Equal(2, result);
         }
+        [Fact]
+        public async Task Count_ShouldReturnCorrectCount_WhenCategoryNameIsWrong()
+        {
+            // arrange
+             var categoryName = "hello";
+            _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
+            var productrepository = new ProductRepository(_context.Object);
+            // act
+            var result = await productrepository.Count(categoryName);
+            // asssert
+            Assert.NotNull(result);
+            Assert.Equal(0, result);
+        }
 
         [Fact]
-        public async Task GetAllAsync_ShouldReturnPagedProducts()
+        public async Task GetAllAsync_ShouldReturnPagedProducts_WhenCategoryIsAll()
         {
             // arrange 
             int pageNumber = 1;
@@ -43,11 +70,41 @@ namespace Eshop.Infrastructure.Test.Repository
             _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
             var productrepository = new ProductRepository(_context.Object);
             // act
-            var result = await productrepository.GetAllAsync(pageNumber, pageSize);
+            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"All");
             // asssert
             Assert.NotNull(result);
             Assert.IsType<List<Product>>(result);
-            Assert.Equal(ProductFixture.getAllProducts().Count(), result.Count());
+            Assert.Equal(3, result.Count());
+        }
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnPagedProducts_WhenCategoryIsSmartphone()
+        {
+            // arrange 
+            int pageNumber = 1;
+            int pageSize = 10;
+            _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
+            var productrepository = new ProductRepository(_context.Object);
+            // act
+            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"Smartphone");
+            // asssert
+            Assert.NotNull(result);
+            Assert.IsType<List<Product>>(result);
+            Assert.Equal(2, result.Count());
+        }
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnPagedProductsWithEmptyProduct_WhenCategoryDoesNotExist()
+        {
+            // arrange 
+            int pageNumber = 1;
+            int pageSize = 10;
+            _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
+            var productrepository = new ProductRepository(_context.Object);
+            // act
+            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"hello");
+            // asssert
+            Assert.NotNull(result);
+            Assert.IsType<List<Product>>(result);
+            Assert.Equal(0, result.Count());
         }
         [Fact]
         public async Task GetOneAsync_ShouldReturnOneProductById()
