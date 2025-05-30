@@ -41,11 +41,11 @@ namespace Eshop.Application.Services
 
         }
 
-        public async Task<PageDto<ProductDtoResponse>> GetAllProductAsync(int pageNumber, int pageSize,string category)
+        public async Task<PageDto<ProductDtoResponse>> GetAllProductAsync(int pageNumber, int pageSize,string category,string? search,string? order_type,bool asc)
         {
             var count = await _productRepository.Count(category);
             var getcategory = await _categoryRepository.GetOneByNameAsync(category);
-            var productRepository = await _productRepository.GetAllAsync(pageNumber, pageSize,category);
+            var productRepository = await _productRepository.GetAllAsync(pageNumber, pageSize,category,search,order_type,asc);
             var dto = productRepository.Select(product => _mapper.Map<ProductDtoResponse>(product)).ToList();
             PageDto<ProductDtoResponse> pageResponse = new PageDto<ProductDtoResponse>
             {

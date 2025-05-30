@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Eshop.Application.Dtos.Response.Product;
 using Eshop.Application.Interfaces.Repository;
 using Eshop.Domain.Entities;
 using Eshop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Eshop.Infrastructure.Repository
 {
@@ -17,7 +19,7 @@ namespace Eshop.Infrastructure.Repository
 
         public async Task<int> Count(string category)
         {
-            return await _appDbContext.Products.Where(x=> category=="All" || x.category.CategoryName == category).CountAsync();
+            return await _appDbContext.Products.Where(x => category == "All" || x.category.CategoryName == category).CountAsync();
         }
 
         public async Task<Product> CreateAsync(Product product)
@@ -40,10 +42,26 @@ namespace Eshop.Infrastructure.Repository
 
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync(int pageNumber, int pageSize,string category)
+        public async Task<IEnumerable<Product>> GetAllAsync(int pageNumber, int pageSize, string category, string search,
+        string? order_type,bool asc)
         {
-            return await _appDbContext.Products.Where(x=> category=="All" || x.category.CategoryName == category)
-            .Skip((pageNumber - 1) * pageSize).Take(pageSize).Include(x => x.category).OrderBy(x=>x.Id).ToListAsync();
+            var query = _appDbContext.Products.AsNoTracking().Where(x => category == "All" || x.category.CategoryName == category);
+            
+            query=query.Where(x => string.IsNullOrEmpty(search) || x.Name.ToLower().Contains(search.ToLower()))
+                              .Skip((pageNumber - 1) * pageSize).Take(pageSize).Include(x => x.category);
+            switch (order_type)
+            {
+                case "name":
+                 query=asc?query.OrderBy(x => x.Name):query.OrderByDescending(x => x.Name);
+                    break;
+                case "price":
+                    query=asc?query.OrderBy(x => x.Price):query.OrderByDescending(x => x.Price);
+                    break;
+                default:
+                   query=query.OrderBy(x => x.Id);
+                    break;
+            }
+            return await query.ToListAsync();
         }
 
         public async Task<Product> GetOneAsync(long id)

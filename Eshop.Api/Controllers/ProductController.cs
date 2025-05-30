@@ -24,12 +24,13 @@ namespace Eshop.Api.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<PageDto<ProductDtoResponse>>> GetAllProducts([FromQuery] int pageNumber, [FromQuery] int pageSize,[FromQuery] string category)
+        public async Task<ActionResult<PageDto<ProductDtoResponse>>> GetAllProducts([FromQuery] int pageNumber,
+               [FromQuery] int pageSize,[FromQuery] string category,[FromQuery] string? search,string? order_type,bool asc=true)
         {
 
             try
             {
-                return Ok(await _productService.GetAllProductAsync(pageNumber, pageSize,category));
+                return Ok(await _productService.GetAllProductAsync(pageNumber, pageSize,category,search,order_type,asc));
 
             }
             catch (Exception ex)
