@@ -34,12 +34,6 @@ namespace Eshop.Infrastructure.Repository
             return true;
         }
 
-        public async Task<IEnumerable<BasketProduct>> GetAllAsync(string userid)
-        {
-            return await _appDbContext.BasketProducts.Where(p =>p.Basket.UserId == userid).ToListAsync();
-            
-        }
-
         public async Task<BasketProduct> GetOneAsync(long id)
         {
             return await _appDbContext.BasketProducts.Include(x => x.Basket).FirstOrDefaultAsync(x => x.Id == id);

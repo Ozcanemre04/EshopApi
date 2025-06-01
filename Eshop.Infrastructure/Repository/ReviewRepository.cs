@@ -36,13 +36,13 @@ namespace Eshop.Infrastructure.Repository
 
         public async Task<IEnumerable<Review>> GetAllAsync()
         {
-            return await _appDbContext.Reviews.ToListAsync();
+            return await _appDbContext.Reviews.AsNoTracking().ToListAsync();
 
         }
 
         public async Task<Review> GetOneAsync(long id)
         {
-            return await _appDbContext.Reviews.FirstOrDefaultAsync(x=>x.Id==id);
+            return await _appDbContext.Reviews.AsNoTracking().FirstOrDefaultAsync(x=>x.Id==id);
         }
 
         public async Task<Review> UpdateAsync(Review review)

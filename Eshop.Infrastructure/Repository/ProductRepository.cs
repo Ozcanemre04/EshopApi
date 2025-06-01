@@ -16,10 +16,17 @@ namespace Eshop.Infrastructure.Repository
         public ProductRepository(AppDbContext appDbContext) : base(appDbContext)
         {
         }
-
-        public async Task<int> Count(string category)
+        
+        private IQueryable<Product> filterProduct(string category, string search)
         {
-            return await _appDbContext.Products.Where(x => category == "All" || x.category.CategoryName == category).CountAsync();
+            var query = _appDbContext.Products.Where(x => category == "All" || x.category.CategoryName == category);
+            query = query.Where(x => string.IsNullOrEmpty(search) || x.Name.ToLower().Contains(search.ToLower()));
+            return query;
+        }
+        public async Task<int> Count(string category,string search)
+        {  
+            IQueryable<Product> query = filterProduct(category, search);
+            return await query.CountAsync();
         }
 
         public async Task<Product> CreateAsync(Product product)
@@ -45,10 +52,8 @@ namespace Eshop.Infrastructure.Repository
         public async Task<IEnumerable<Product>> GetAllAsync(int pageNumber, int pageSize, string category, string search,
         string? order_type,bool asc)
         {
-            var query = _appDbContext.Products.AsNoTracking().Where(x => category == "All" || x.category.CategoryName == category);
-            
-            query=query.Where(x => string.IsNullOrEmpty(search) || x.Name.ToLower().Contains(search.ToLower()))
-                              .Skip((pageNumber - 1) * pageSize).Take(pageSize).Include(x => x.category);
+            IQueryable<Product> query = filterProduct(category, search)
+                                        .Skip((pageNumber - 1) * pageSize).Take(pageSize).Include(x => x.category);
             switch (order_type)
             {
                 case "name":
@@ -66,7 +71,7 @@ namespace Eshop.Infrastructure.Repository
 
         public async Task<Product> GetOneAsync(long id)
         {
-            return await _appDbContext.Products.Include(x => x.category).FirstOrDefaultAsync(x => x.Id == id);
+            return await _appDbContext.Products.AsNoTracking().Include(x => x.category).FirstOrDefaultAsync(x => x.Id == id);
 
         }
 

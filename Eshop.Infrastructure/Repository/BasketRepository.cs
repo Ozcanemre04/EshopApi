@@ -25,12 +25,12 @@ namespace Eshop.Infrastructure.Repository
 
         public async Task<Basket> GetOneAsync(string id)
         {
-            return await _appDbContext.Baskets.FirstOrDefaultAsync(x => x.UserId == id);
+            return await _appDbContext.Baskets.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == id);
         }
 
         public async Task<Basket> GetAllAsync(string userid)
         {
-            return await _appDbContext.Baskets.Include(x => x.BasketProducts).FirstOrDefaultAsync(p => p.UserId == userid);
+            return await _appDbContext.Baskets.AsNoTracking().Include(x => x.BasketProducts).FirstOrDefaultAsync(p => p.UserId == userid);
         }
     }
 }

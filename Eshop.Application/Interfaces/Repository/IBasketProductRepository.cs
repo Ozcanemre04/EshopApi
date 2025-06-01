@@ -8,7 +8,6 @@ namespace Eshop.Application.Interfaces.Repository
 {
     public interface IBasketProductRepository
     {
-        Task<IEnumerable<BasketProduct>> GetAllAsync(string userid);
         Task<BasketProduct> GetOneAsync(long id);
         Task<BasketProduct> GetOneByBasketAndProductAsync(long basketId,long productId);
         Task<BasketProduct> CreateAsync(BasketProduct basketProduct);

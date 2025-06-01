@@ -36,17 +36,17 @@ namespace Eshop.Infrastructure.Repository
 
         public async Task<IEnumerable<Category>> GetAllAsync()
         {
-            return await _appDbContext.Categories.OrderBy(x => x.Id).ToListAsync();
+            return await _appDbContext.Categories.AsNoTracking().OrderBy(x => x.Id).ToListAsync();
 
         }
 
         public async Task<Category> GetOneAsync(long id)
         {
-            return await _appDbContext.Categories.FirstOrDefaultAsync(x => x.Id == id);
+            return await _appDbContext.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
         public async Task<Category> GetOneByNameAsync(string name)
         {
-            return await _appDbContext.Categories.FirstOrDefaultAsync(x => x.CategoryName == name);
+            return await _appDbContext.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.CategoryName == name);
         }
 
         public async Task<Category> UpdateAsync(Category category)
