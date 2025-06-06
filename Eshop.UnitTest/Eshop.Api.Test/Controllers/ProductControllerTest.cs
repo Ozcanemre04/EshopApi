@@ -32,9 +32,9 @@ namespace Eshop.Api.Test.Controllers
             //arrange
             var categoryName = "All";
             var productList = ProductDtoFixture.getAllProducts().Where(x=>x.CategoryName == categoryName);
-            _productService.Setup(t => t.GetAllProductAsync(1, 10,categoryName)).ReturnsAsync(PageDtoFixture.pageDtoFixture());
+            _productService.Setup(t => t.GetAllProductAsync(1, 10, categoryName,"","",true)).ReturnsAsync(PageDtoFixture.pageDtoFixture());
             //act
-            var response = await _productController.GetAllProducts(1, 10,categoryName);
+            var response = await _productController.GetAllProducts(1, 10,categoryName,"","",true);
             //assert
             var okResult = Assert.IsType<OkObjectResult>(response.Result);
             var returnValue = Assert.IsType<PageDto<ProductDtoResponse>>(okResult.Value);
@@ -44,9 +44,53 @@ namespace Eshop.Api.Test.Controllers
             Assert.Equal(1, returnValue.PageNumber);
             Assert.Equal(10, returnValue.PageSize);
             Assert.Equal(1, returnValue.TotalPages);
-            
-
         }
+        [Fact]
+        public async void GetAllProduct_ReturnsOKResult_WithPriceSortDescUsed()
+        {
+            //arrange
+            var categoryName = "All";
+            bool asc = false;
+            string sort_type = "price";
+            var pageDto = PageDtoFixture.pageDtoFixture();
+            pageDto.Data = pageDto.Data.OrderByDescending(x=>x.Price);
+            _productService.Setup(t => t.GetAllProductAsync(1, 10, categoryName,"",sort_type,asc)).ReturnsAsync(pageDto);
+            //act
+            var response = await _productController.GetAllProducts(1, 10,categoryName,"",sort_type,asc);
+            //assert
+            var okResult = Assert.IsType<OkObjectResult>(response.Result);
+            var returnValue = Assert.IsType<PageDto<ProductDtoResponse>>(okResult.Value);
+            Assert.NotNull(returnValue);
+            Assert.IsType<ProductDtoResponse>(returnValue.Data.First());
+            Assert.Equal(3, returnValue.Data.Count());
+             Assert.Equal(235.43m, returnValue.Data.First().Price);
+            Assert.Equal(159.56m, returnValue.Data.Last().Price);
+            Assert.Equal(1, returnValue.PageNumber);
+            Assert.Equal(10, returnValue.PageSize);
+            Assert.Equal(1, returnValue.TotalPages);
+        }
+        [Fact]
+        public async void GetAllProduct_ReturnsOKResult_WithSearchFilterUsed()
+        {
+            //arrange
+            var categoryName = "All";
+            string search = "one";
+            var pageDto = PageDtoFixture.pageDtoFixture();
+             pageDto.Data =  pageDto.Data.Where(x=>x.Name.ToLower().Contains(search));
+            _productService.Setup(t => t.GetAllProductAsync(1, 10, categoryName,search,"",true)).ReturnsAsync(pageDto);
+            //act
+            var response = await _productController.GetAllProducts(1, 10,categoryName,search,"",true);
+            //assert
+            var okResult = Assert.IsType<OkObjectResult>(response.Result);
+            var returnValue = Assert.IsType<PageDto<ProductDtoResponse>>(okResult.Value);
+            Assert.NotNull(returnValue);
+            Assert.IsType<ProductDtoResponse>(returnValue.Data.First());
+            Assert.Equal(1, returnValue.Data.Count());
+            Assert.Equal(1, returnValue.PageNumber);
+            Assert.Equal(10, returnValue.PageSize);
+            Assert.Equal(1, returnValue.TotalPages);
+        }
+
         [Fact]
         public async void GetAllProduct_ReturnsOKResult_WithProductsWithSmartphoneCategory()
         {
@@ -57,9 +101,9 @@ namespace Eshop.Api.Test.Controllers
             updatedDataInPageDto.Data = productList;
             updatedDataInPageDto.TotalRecords = productList.Count();
             updatedDataInPageDto.TotalPages = (int)Math.Ceiling(productList.Count()/(double)20);
-            _productService.Setup(t => t.GetAllProductAsync(1, 20,categoryName)).ReturnsAsync(updatedDataInPageDto);
+            _productService.Setup(t => t.GetAllProductAsync(1, 20,categoryName,"","",true)).ReturnsAsync(updatedDataInPageDto);
             //act
-            var response = await _productController.GetAllProducts(1, 20,categoryName);
+            var response = await _productController.GetAllProducts(1, 20,categoryName,"","",true);
             //assert
             var okResult = Assert.IsType<OkObjectResult>(response.Result);
             var returnValue = Assert.IsType<PageDto<ProductDtoResponse>>(okResult.Value);
@@ -81,9 +125,9 @@ namespace Eshop.Api.Test.Controllers
             updatedDataInPageDto.Data = productList;
             updatedDataInPageDto.TotalRecords = productList.Count(); 
             updatedDataInPageDto.TotalPages = (int)Math.Ceiling(productList.Count()/(double)20);
-            _productService.Setup(t => t.GetAllProductAsync(1, 20,categoryName)).ReturnsAsync(updatedDataInPageDto);
+            _productService.Setup(t => t.GetAllProductAsync(1, 20,categoryName,"","",true)).ReturnsAsync(updatedDataInPageDto);
             //act
-            var response = await _productController.GetAllProducts(1, 20,categoryName);
+            var response = await _productController.GetAllProducts(1, 20,categoryName,"","",true);
             //assert
             var okResult = Assert.IsType<OkObjectResult>(response.Result);
             var returnValue = Assert.IsType<PageDto<ProductDtoResponse>>(okResult.Value);

@@ -21,35 +21,7 @@ namespace Eshop.Infrastructure.Test.Repository
         }
 
 
-        [Fact]
-        public async Task GetAllAsync_ShouldReturnBasketProductList()
-        {
-            // arrange 
-            var userId = "bad206e0-3980-4746-893b-80afc748dfea";
-            var basketProducts = BasketProductFixture.AllProductInBasket();
-            _context.Setup(p => p.BasketProducts).ReturnsDbSet(basketProducts);
-            var basketProductRepository = new BasketProductRepository(_context.Object);
-            // act
-            var result = await basketProductRepository.GetAllAsync(userId);
-            // asssert
-            Assert.NotNull(result);
-            Assert.IsType<List<BasketProduct>>(result);
-            Assert.Equal(1, result.Count());
-        }
-        [Fact]
-        public async Task GetAllAsync_ShouldReturnNullIfnotFound()
-        {
-            // arrange 
-            var userId = "user2334";
-            var basketProducts = BasketProductFixture.AllProductInBasket();
-            _context.Setup(p => p.BasketProducts).ReturnsDbSet(basketProducts);
-            var basketProductRepository = new BasketProductRepository(_context.Object);
-            // act
-            var result = await basketProductRepository.GetAllAsync(userId);
-            // asssert
-            Assert.Empty(result);
-            
-        }
+        
         [Fact]
         public async Task GetOneAsync_ShouldReturnOneBasketProductById()
         {

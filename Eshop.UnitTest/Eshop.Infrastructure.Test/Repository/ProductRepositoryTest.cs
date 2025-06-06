@@ -26,23 +26,39 @@ namespace Eshop.Infrastructure.Test.Repository
         {
             // arrange
              var categoryName = "All";
+             string search = "";
             _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
             var productrepository = new ProductRepository(_context.Object);
             // act
-            var result = await productrepository.Count(categoryName);
+            var result = await productrepository.Count(categoryName, search);
             // asssert
             Assert.NotNull(result);
             Assert.Equal(3, result);
+        }
+        [Fact]
+        public async Task Count_ShouldReturnCorrectCount_WhenCategoryNameIsAllAndSearchFilterUsed()
+        {
+            // arrange
+             var categoryName = "All";
+             string search = "ip";
+            _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
+            var productrepository = new ProductRepository(_context.Object);
+            // act
+            var result = await productrepository.Count(categoryName, search);
+            // asssert
+            Assert.NotNull(result);
+            Assert.Equal(1, result);
         }
         [Fact]
         public async Task Count_ShouldReturnCorrectCount_WhenCategoryNameIsSmartphone()
         {
             // arrange
              var categoryName = "Smartphone";
+             string search = "";
             _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
             var productrepository = new ProductRepository(_context.Object);
             // act
-            var result = await productrepository.Count(categoryName);
+            var result = await productrepository.Count(categoryName,search);
             // asssert
             Assert.NotNull(result);
             Assert.Equal(2, result);
@@ -52,10 +68,11 @@ namespace Eshop.Infrastructure.Test.Repository
         {
             // arrange
              var categoryName = "hello";
+             string search = "";
             _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
             var productrepository = new ProductRepository(_context.Object);
             // act
-            var result = await productrepository.Count(categoryName);
+            var result = await productrepository.Count(categoryName,search);
             // asssert
             Assert.NotNull(result);
             Assert.Equal(0, result);
@@ -67,14 +84,55 @@ namespace Eshop.Infrastructure.Test.Repository
             // arrange 
             int pageNumber = 1;
             int pageSize = 10;
+            string search = "";
+            string order_type = "";
+            bool asc = true;
             _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
             var productrepository = new ProductRepository(_context.Object);
             // act
-            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"All");
+            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"All",search,order_type,asc);
             // asssert
             Assert.NotNull(result);
             Assert.IsType<List<Product>>(result);
             Assert.Equal(3, result.Count());
+        }
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnPagedProducts_WhenSearchFilterIsUsed()
+        {
+            // arrange 
+            int pageNumber = 1;
+            int pageSize = 10;
+            string search = "ung";
+            string order_type = "";
+            bool asc = true;
+            _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
+            var productrepository = new ProductRepository(_context.Object);
+            // act
+            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"All",search,order_type,asc);
+            // asssert
+            Assert.NotNull(result);
+            Assert.IsType<List<Product>>(result);
+            Assert.Equal(2, result.Count());
+        }
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnPagedProducts_WhenPriceSortDescIsUsed()
+        {
+            // arrange 
+            int pageNumber = 1;
+            int pageSize = 10;
+            string search = "";
+            string order_type = "price";
+            bool asc = false;
+            _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
+            var productrepository = new ProductRepository(_context.Object);
+            // act
+            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"All",search,order_type,asc);
+            // asssert
+            Assert.NotNull(result);
+            Assert.IsType<List<Product>>(result);
+            Assert.Equal(3, result.Count());
+            Assert.Equal(235.43m, result.First().Price);
+            Assert.Equal(159.56m, result.Last().Price);
         }
         [Fact]
         public async Task GetAllAsync_ShouldReturnPagedProducts_WhenCategoryIsSmartphone()
@@ -85,7 +143,7 @@ namespace Eshop.Infrastructure.Test.Repository
             _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
             var productrepository = new ProductRepository(_context.Object);
             // act
-            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"Smartphone");
+            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"Smartphone","","",true);
             // asssert
             Assert.NotNull(result);
             Assert.IsType<List<Product>>(result);
@@ -100,7 +158,7 @@ namespace Eshop.Infrastructure.Test.Repository
             _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
             var productrepository = new ProductRepository(_context.Object);
             // act
-            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"hello");
+            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"hello","","",true);
             // asssert
             Assert.NotNull(result);
             Assert.IsType<List<Product>>(result);
