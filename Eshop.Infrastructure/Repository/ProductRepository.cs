@@ -53,7 +53,7 @@ namespace Eshop.Infrastructure.Repository
         string? order_type,bool asc)
         {
             IQueryable<Product> query = filterProduct(category, search)
-                                        .Skip((pageNumber - 1) * pageSize).Take(pageSize).Include(x => x.category);
+                                        .Skip(pageNumber * pageSize).Take(pageSize).Include(x => x.category);
             switch (order_type)
             {
                 case "name":
