@@ -52,8 +52,7 @@ namespace Eshop.Infrastructure.Repository
         public async Task<IEnumerable<Product>> GetAllAsync(int pageNumber, int pageSize, string category, string search,
         string? order_type,bool asc)
         {
-            IQueryable<Product> query = filterProduct(category, search)
-                                        .Skip(pageNumber * pageSize).Take(pageSize).Include(x => x.category);
+            IQueryable<Product> query = filterProduct(category, search);
             switch (order_type)
             {
                 case "name":
@@ -66,6 +65,7 @@ namespace Eshop.Infrastructure.Repository
                    query=query.OrderBy(x => x.Id);
                     break;
             }
+            query = query.Skip(pageNumber * pageSize).Take(pageSize).Include(x => x.category);
             return await query.ToListAsync();
         }
 
