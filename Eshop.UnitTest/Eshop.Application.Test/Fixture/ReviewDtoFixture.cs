@@ -25,7 +25,7 @@ namespace Eshop.Application.Test.Fixture
                     Stars=3,
                     Reviews="This is a fantastic product you should buy.This is a fantastic product you should buy.",
                     UserId="bad206e0-3980-4746-893b-80afc748dfea",
-                    ProductId=5,
+                    ProductId=2,
                     CreatedDate = DateTime.Now,
                     
                 },

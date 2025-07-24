@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Eshop.Application.Dtos.Request.Review;
+using Eshop.Application.Dtos.Response.Commun;
 using Eshop.Application.Dtos.Response.Review;
 using Eshop.Application.Interfaces.Repository;
 using Eshop.Application.Interfaces.Service;
@@ -36,7 +37,7 @@ namespace Eshop.Application.Services
             return _mapper.Map<ReviewDtoResponse>(review);
         }
 
-        public async Task<string> DeleteReviewAsync(long id)
+        public async Task<MessageDto> DeleteReviewAsync(long id)
         {
 
             var user = _currentUserService.UserId;
@@ -47,13 +48,13 @@ namespace Eshop.Application.Services
             }
             else
             {
-                return await _reviewRepository.DeleteAsync(id) ? "review is deleted" : throw new KeyNotFoundException("review is not found");
+                return await _reviewRepository.DeleteAsync(id) ? new MessageDto{Message="review is deleted"} : throw new KeyNotFoundException("review is not found");
             }
         }
 
-        public async Task<IEnumerable<ReviewDtoResponse>> GetAllReviewsAsync()
+        public async Task<IEnumerable<ReviewDtoResponse>> GetAllReviewsAsync(long productId)
         {
-            var reviews = await _reviewRepository.GetAllAsync();
+            var reviews = await _reviewRepository.GetAllAsync(productId);
             return reviews.Select(review => _mapper.Map<ReviewDtoResponse>(review)).ToList();
         }
 

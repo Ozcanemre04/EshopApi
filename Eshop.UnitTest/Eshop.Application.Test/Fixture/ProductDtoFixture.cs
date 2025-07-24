@@ -21,7 +21,8 @@ namespace Eshop.Application.Test.Fixture
                     CategoryId = 1,
                     CreatedDate = DateTime.Now,
                     Image ="hello",
-                    CategoryName="Smartphone"
+                    CategoryName="Smartphone",
+                    Ratings = 3.5D
                 },
                 new ProductDtoResponse {
                     Id = 2,
@@ -32,7 +33,8 @@ namespace Eshop.Application.Test.Fixture
                     CategoryId = 1,
                     CreatedDate = DateTime.Now,
                     Image ="hello",
-                    CategoryName="Smartphone"
+                    CategoryName="Smartphone",
+                    Ratings = 5.0D
                 },
                 new ProductDtoResponse {
                     Id = 2,
@@ -43,7 +45,8 @@ namespace Eshop.Application.Test.Fixture
                     CategoryId = 1,
                     CreatedDate = DateTime.Now,
                     Image ="hello",
-                    CategoryName="Books"
+                    CategoryName="Books",
+                    Ratings = 1.0D
                 }
              };
         }

@@ -6,10 +6,12 @@ using AutoMapper;
 using Eshop.Application.Dtos.Request.BasketProduct;
 using Eshop.Application.Dtos.Request.Product;
 using Eshop.Application.Dtos.Response.BasketProduct;
+using Eshop.Application.Dtos.Response.Commun;
 using Eshop.Application.Dtos.Response.Product;
 using Eshop.Application.Interfaces.Repository;
 using Eshop.Application.Interfaces.Service;
 using Eshop.Domain.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Eshop.Application.Services
 {
@@ -21,6 +23,7 @@ namespace Eshop.Application.Services
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
         private readonly ICurrentUserService _currentUserService;
+      
         public BasketProductService(IBasketProductRepository basketProductRepository, IMapper mapper,
         IProductRepository productRepository, ICurrentUserService currentUserService, IBasketRepository basketRepository)
         {
@@ -29,7 +32,6 @@ namespace Eshop.Application.Services
             _currentUserService = currentUserService;
             _mapper = mapper;
             _basketRepository = basketRepository;
-
         }
 
         public async Task<BasketProductDtoResponse> CreateBasketProductAsync(BasketProductDtoCreateRequest basketProductDtoCreateRequest)
@@ -56,14 +58,15 @@ namespace Eshop.Application.Services
         }
 
 
-        public async Task<string> DeleteBasketProductAsync(long id)
+        public async Task<MessageDto> DeleteBasketProductAsync(long id)
         {
             var user = _currentUserService.UserId;
             var basketProduct = await _basketProductRepository.GetOneAsync(id)??throw new KeyNotFoundException("product is not found");
             if (basketProduct.Basket.UserId != user){
                 throw new UnauthorizedAccessException("unauthorized");
             }
-            return await _basketProductRepository.DeleteAsync(id) ? "product is deleted" : throw new KeyNotFoundException("product is not found");
+            var productdeleted = await _basketProductRepository.DeleteAsync(id) ? new MessageDto{Message="product is deleted"} : throw new KeyNotFoundException("product is not found"); 
+            return productdeleted;
         }
 
         public async Task<BasketDtoResponse> GetAllBasketProductAsync()
@@ -88,8 +91,11 @@ namespace Eshop.Application.Services
             BasketProduct.Quantity++;
             BasketProduct.UpdatedDate = DateTime.UtcNow;
             BasketProduct.TotalPrice = BasketProduct.Quantity * product.Price;
+
             await _basketProductRepository.UpdateAsync(BasketProduct);
-            return _mapper.Map<BasketProductDtoResponse>(BasketProduct);
+            var dto = _mapper.Map<BasketProductDtoResponse>(BasketProduct);
+            dto.Price = product.Price;
+            return dto;
 
         }
         public async Task<BasketProductDtoResponse> DecreaseQuantityAsync(long id)
@@ -107,13 +113,17 @@ namespace Eshop.Application.Services
             if (BasketProduct.Quantity == 0)
             {
                 await DeleteBasketProductAsync(BasketProduct.Id);
-                return _mapper.Map<BasketProductDtoResponse>(BasketProduct);
+                 var dto = _mapper.Map<BasketProductDtoResponse>(BasketProduct);
+                 dto.Price = product.Price;
+                 return dto;
 
             }
             else
             {
                 await _basketProductRepository.UpdateAsync(BasketProduct);
-                return _mapper.Map<BasketProductDtoResponse>(BasketProduct);
+                 var dto = _mapper.Map<BasketProductDtoResponse>(BasketProduct);
+                 dto.Price = product.Price;
+                 return dto;
 
             }
         }

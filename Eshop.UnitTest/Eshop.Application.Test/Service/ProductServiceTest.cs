@@ -12,6 +12,7 @@ using Eshop.Application.Services;
 using Eshop.Application.Test.Fixture;
 using Eshop.Domain.Entities;
 using Eshop.Infrastructure.Test.Fixture;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace Eshop.Application.Test.Service
@@ -22,6 +23,7 @@ namespace Eshop.Application.Test.Service
         private readonly Mock<ICategoryRepository> _categoryRepositoryMock;
         private readonly IMapper _mapper;
         private readonly ProductService _productService;
+        private readonly ILogger<ProductService> _logger;
 
         public ProductServiceTest()
         {
@@ -29,21 +31,21 @@ namespace Eshop.Application.Test.Service
             _categoryRepositoryMock = new Mock<ICategoryRepository>();
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
             _mapper = config.CreateMapper();
-            _productService = new ProductService(_productRepositoryMock.Object, _mapper, _categoryRepositoryMock.Object);
+            _productService = new ProductService(_productRepositoryMock.Object, _mapper, _categoryRepositoryMock.Object,_logger);
         }
 
         [Fact]
         public async Task GetAllProductAsync_ShouldReturnPageProduct_()
         {
             //arrange
-            int pageNumber = 1;
+            int pageNumber = 0;
             int pageSize = 10;
             string categoryName = "Smartphone";
             string search = "";
             string order_type = "";
             bool asc = true;
             _productRepositoryMock.Setup(p => p.Count(categoryName,search)).ReturnsAsync(ProductFixture.getAllProducts().Count());
-            _productRepositoryMock.Setup(p => p.GetAllAsync(pageNumber, pageSize,categoryName,search,order_type,asc)).ReturnsAsync(ProductFixture.getAllProducts());
+            _productRepositoryMock.Setup(p => p.GetAllComplexAsync(pageNumber, pageSize,categoryName,search,order_type,asc)).ReturnsAsync(ProductFixture.getAllProducts());
             //act
             var result = await _productService.GetAllProductAsync(pageNumber, pageSize,categoryName,search,order_type,asc);
             //assert
@@ -51,22 +53,22 @@ namespace Eshop.Application.Test.Service
             Assert.IsType<PageDto<ProductDtoResponse>>(result);
             Assert.NotEmpty(result.Data);
             Assert.Equal(ProductDtoFixture.getAllProducts().Count(), result.Data.Count());
-            Assert.Equal(1, result.PageNumber);
+            Assert.Equal(0, result.PageNumber);
             Assert.Equal(10, result.PageSize);
-            Assert.IsType<List<ProductDtoResponse>>(result.Data);
+            Assert.IsType<ProductDtoResponse>(result.Data.First());
         }
         [Fact]
         public async Task GetAllProductAsync_ShouldReturnPageProduct_WhenSearchFilterIsUsed()
         {
             //arrange
-            int pageNumber = 1;
+            int pageNumber = 0;
             int pageSize = 10;
             string categoryName = "All";
             string search = "ip";
             string order_type = "";
             bool asc = true;
             var productlist = ProductFixture.getAllProducts().Where(x=>x.Name.ToLower().Contains(search));
-            _productRepositoryMock.Setup(p => p.GetAllAsync(pageNumber, pageSize,categoryName,search,order_type,asc)).ReturnsAsync(productlist);
+            _productRepositoryMock.Setup(p => p.GetAllComplexAsync(pageNumber, pageSize,categoryName,search,order_type,asc)).ReturnsAsync(productlist);
             //act
             var result = await _productService.GetAllProductAsync(pageNumber, pageSize,categoryName,search,order_type,asc);
             //assert
@@ -74,22 +76,22 @@ namespace Eshop.Application.Test.Service
             Assert.IsType<PageDto<ProductDtoResponse>>(result);
             Assert.NotEmpty(result.Data);
             Assert.Equal(1, result.Data.Count());
-            Assert.Equal(1, result.PageNumber);
+            Assert.Equal(0, result.PageNumber);
             Assert.Equal(10, result.PageSize);
-            Assert.IsType<List<ProductDtoResponse>>(result.Data);
+            Assert.IsType<ProductDtoResponse>(result.Data.First());
         }
         [Fact]
         public async Task GetAllProductAsync_ShouldReturnPageProduct_WhenPriceDESCSortIsUsed()
         {
             //arrange
-            int pageNumber = 1;
+            int pageNumber = 0;
             int pageSize = 10;
             string categoryName = "All";
             string search = "";
             string order_type = "price";
             bool asc = false;
             var productlist = ProductFixture.getAllProducts().OrderByDescending(x=>x.Price);
-            _productRepositoryMock.Setup(p => p.GetAllAsync(pageNumber, pageSize,categoryName,search,order_type,asc)).ReturnsAsync(productlist);
+            _productRepositoryMock.Setup(p => p.GetAllComplexAsync(pageNumber, pageSize,categoryName,search,order_type,asc)).ReturnsAsync(productlist);
             //act
             var result = await _productService.GetAllProductAsync(pageNumber, pageSize,categoryName,search,order_type,asc);
             //assert
@@ -99,15 +101,15 @@ namespace Eshop.Application.Test.Service
             Assert.Equal(3, result.Data.Count());
             Assert.Equal(235.43m, result.Data.First().Price);
             Assert.Equal(159.56m, result.Data.Last().Price);
-            Assert.Equal(1, result.PageNumber);
+            Assert.Equal(0, result.PageNumber);
             Assert.Equal(10, result.PageSize);
-            Assert.IsType<List<ProductDtoResponse>>(result.Data);
+            Assert.IsType<ProductDtoResponse>(result.Data.First());
         }
         [Fact]
         public async Task GetAllProductAsync_ShouldReturnPageProduct_WhenCategoryIsBooks()
         {
             //arrange
-            int pageNumber = 1;
+            int pageNumber = 0;
             int pageSize = 10;
             string categoryName = "Books";
             string search = "";
@@ -116,16 +118,16 @@ namespace Eshop.Application.Test.Service
             var productlist = ProductFixture.getAllProducts().Where(x=>x.category.CategoryName==categoryName);
             _productRepositoryMock.Setup(p => p.Count(categoryName,search)).ReturnsAsync(productlist.Count());
              _categoryRepositoryMock.Setup(p => p.GetOneByNameAsync(categoryName)).ReturnsAsync(CategoryFixture.CategoryList().Last());
-            _productRepositoryMock.Setup(p => p.GetAllAsync(pageNumber, pageSize,categoryName,search,order_type,asc)).ReturnsAsync(productlist);
+            _productRepositoryMock.Setup(p => p.GetAllComplexAsync(pageNumber, pageSize,categoryName,search,order_type,asc)).ReturnsAsync(productlist);
             //act
             var result = await _productService.GetAllProductAsync(pageNumber, pageSize,categoryName,search,order_type,asc);
             //assert
             Assert.NotNull(result);
             Assert.IsType<PageDto<ProductDtoResponse>>(result);
-            Assert.IsType<List<ProductDtoResponse>>(result.Data);
+            Assert.IsType<ProductDtoResponse>(result.Data.First());
             Assert.NotEmpty(result.Data);
             Assert.Equal(1, result.Data.Count());
-            Assert.Equal(1, result.PageNumber);
+            Assert.Equal(0, result.PageNumber);
             Assert.Equal(10, result.PageSize);
             
         }
@@ -133,7 +135,7 @@ namespace Eshop.Application.Test.Service
         public async Task GetAllProductAsync_ShouldReturnPageProduct_WhenCategoryIsNotFound()
         {
             //arrange
-            int pageNumber = 1;
+            int pageNumber = 0;
             int pageSize = 10;
             string categoryName = "hello";
             string search = "";
@@ -142,16 +144,15 @@ namespace Eshop.Application.Test.Service
             var productlist = ProductFixture.getAllProducts().Where(x=>x.category.CategoryName==categoryName);
             _productRepositoryMock.Setup(p => p.Count(categoryName,search)).ReturnsAsync(productlist.Count());
             _categoryRepositoryMock.Setup(p => p.GetOneByNameAsync(categoryName)).ReturnsAsync(CategoryFixture.CategoryList().Last());
-            _productRepositoryMock.Setup(p => p.GetAllAsync(pageNumber, pageSize,categoryName,search,order_type,asc)).ReturnsAsync(productlist);
+            _productRepositoryMock.Setup(p => p.GetAllComplexAsync(pageNumber, pageSize,categoryName,search,order_type,asc)).ReturnsAsync(productlist);
             //act
             var result = await _productService.GetAllProductAsync(pageNumber, pageSize,categoryName,search,order_type,asc);
             //assert
             Assert.NotNull(result);
             Assert.IsType<PageDto<ProductDtoResponse>>(result);
-            Assert.IsType<List<ProductDtoResponse>>(result.Data);
             Assert.Empty(result.Data);
             Assert.Equal(0, result.Data.Count());
-            Assert.Equal(1, result.PageNumber);
+            Assert.Equal(0, result.PageNumber);
             Assert.Equal(10, result.PageSize);
         }
         
@@ -162,6 +163,7 @@ namespace Eshop.Application.Test.Service
             long productId = 1;
             Product product = ProductFixture.getAllProducts().FirstOrDefault(x => x.Id == productId)!;
             ProductDtoResponse productDtoResponse = ProductDtoFixture.getAllProducts().FirstOrDefault(x => x.Id == productId)!;
+            _productRepositoryMock.Setup(p => p.AverageRatings(productId)).ReturnsAsync(3.5D);
             _productRepositoryMock.Setup(p => p.GetOneAsync(productId)).ReturnsAsync(product);
             //act
             var result = await _productService.GetOneProductAsync(productId);
@@ -172,6 +174,7 @@ namespace Eshop.Application.Test.Service
             Assert.Equal(productDtoResponse.Id, result.Id);
             Assert.Equal(productDtoResponse.Price, result.Price);
             Assert.Equal(productDtoResponse.Stock, result.Stock);
+            Assert.Equal(productDtoResponse.Ratings, result.Ratings);
         }
         [Fact]
         public async Task GetOneProductAsync_ShouldThrowKeyNotFoundException_whenProductDoesNotExist()

@@ -29,11 +29,11 @@ namespace Eshop.Infrastructure.Test.Repository
             _context.Setup(p => p.Reviews).ReturnsDbSet(reviews);
             var reviewRepository = new ReviewRepository(_context.Object);
             // act
-            var result = await reviewRepository.GetAllAsync();
+            var result = await reviewRepository.GetAllAsync(1);
             // asssert
             Assert.NotNull(result);
             Assert.IsType<List<Review>>(result);
-            Assert.Equal(reviews.Count(), result.Count());
+            Assert.Equal(reviews.Where(x=>x.ProductId==1).Count(), result.Count());
         }
         [Fact]
         public async Task GetOneAsync_ShouldReturnOneReviewById()

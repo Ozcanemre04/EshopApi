@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,6 +10,7 @@ using Eshop.Application.Dtos.Response.Product;
 using Eshop.Application.Interfaces.Repository;
 using Eshop.Application.Interfaces.Service;
 using Eshop.Domain.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Eshop.Application.Services
 {
@@ -17,11 +19,18 @@ namespace Eshop.Application.Services
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
-        public ProductService(IProductRepository productRepository, IMapper mapper, ICategoryRepository categoryRepository)
+        private readonly ILogger<ProductService> _logger;
+
+
+
+        public ProductService(IProductRepository productRepository, IMapper mapper, ICategoryRepository categoryRepository,
+        ILogger<ProductService> logger)
         {
             _productRepository = productRepository;
             _mapper = mapper;
             _categoryRepository = categoryRepository;
+            _logger = logger;
+            
         }
         public async Task<ProductDtoResponse> CreateProductAsync(ProductDtoCreateRequest productDtoCreateRequest)
         {
@@ -41,20 +50,25 @@ namespace Eshop.Application.Services
 
         }
 
-        public async Task<PageDto<ProductDtoResponse>> GetAllProductAsync(int pageNumber, int pageSize,string category,string? search,string? order_type,bool asc)
-        { 
-            var count = await _productRepository.Count(category,search);
+        public async Task<PageDto<ProductDtoResponse>> GetAllProductAsync(int pageNumber, int pageSize, string category, string? search, string? order_type, bool asc)
+        {
+            var count = await _productRepository.Count(category, search);
             var getcategory = await _categoryRepository.GetOneByNameAsync(category);
-            var productRepository = await _productRepository.GetAllAsync(pageNumber, pageSize,category,search,order_type,asc);
-            int number_of_Product = productRepository.Count();
+            var productRepository = await _productRepository.GetAllComplexAsync(pageNumber, pageSize, category, search, order_type, asc);
             var dto = productRepository.Select(product => _mapper.Map<ProductDtoResponse>(product)).ToList();
+            var dtoRatings = dto.Select(d =>
+            {
+                d.Ratings = _productRepository.AverageRatings(d.Id).Result;
+                return d;
+            });
+
             PageDto<ProductDtoResponse> pageResponse = new PageDto<ProductDtoResponse>
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalPages = (int)Math.Ceiling(count / (double)pageSize),
                 TotalRecords = count,
-                Data = dto
+                Data = dtoRatings
             };
             return pageResponse;
         }
@@ -62,7 +76,9 @@ namespace Eshop.Application.Services
         public async Task<ProductDtoResponse> GetOneProductAsync(long id)
         {
             var productRepository = await _productRepository.GetOneAsync(id) ?? throw new KeyNotFoundException($"product with id: {id} is not found");
-            var dto = _mapper.Map<ProductDtoResponse>(productRepository);
+            var rating = await _productRepository.AverageRatings(id);
+            var dto = _mapper.Map<ProductDtoResponse>(productRepository); 
+            dto.Ratings = rating;
             return dto;
         }
 
@@ -74,6 +90,11 @@ namespace Eshop.Application.Services
             await _productRepository.UpdateAsync(product);
             return _mapper.Map<ProductDtoResponse>(product);
         }
+
+
+        
+       
+        
     }
 
 

@@ -27,7 +27,7 @@ namespace Eshop.Infrastructure.DependencyInjection
             services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"),
             b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
-
+             
             //identity
             services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<AppDbContext>()
@@ -59,9 +59,11 @@ namespace Eshop.Infrastructure.DependencyInjection
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
+                    ValidateLifetime=true,
                     ValidIssuer = configuration.GetSection("JWT:Issuer").Value,
                     ValidAudience = configuration.GetSection("JWT:Audience").Value,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("JWT:Key").Value))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("JWT:Key").Value)),
+                    ClockSkew = TimeSpan.Zero,
 
                 };
 

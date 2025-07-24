@@ -2,6 +2,7 @@
 
 using Eshop.Application.Dtos.Request.BasketProduct;
 using Eshop.Application.Dtos.Response.BasketProduct;
+using Eshop.Application.Dtos.Response.Commun;
 
 namespace Eshop.Application.Interfaces.Service
 {
@@ -9,7 +10,7 @@ namespace Eshop.Application.Interfaces.Service
     {
         Task<BasketDtoResponse> GetAllBasketProductAsync();
         Task<BasketProductDtoResponse> CreateBasketProductAsync(BasketProductDtoCreateRequest basketProductDtoCreateRequest);
-        Task<string> DeleteBasketProductAsync(long id);
+        Task<MessageDto> DeleteBasketProductAsync(long id);
         Task<BasketProductDtoResponse> IncreaseQuantityAsync(long id);
         Task<BasketProductDtoResponse> DecreaseQuantityAsync(long id);
     }

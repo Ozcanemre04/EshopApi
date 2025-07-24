@@ -19,11 +19,11 @@ namespace Eshop.Api.Controllers
             _reviewService = reviewService;
         }
 
-        [HttpGet()]
-        public async Task<ActionResult<IEnumerable<ReviewDtoResponse>>> GetAllReviews()
+        [HttpGet("{ProductId:long}")]
+        public async Task<ActionResult<IEnumerable<ReviewDtoResponse>>> GetAllReviews([FromRoute] long ProductId)
         {
 
-            return Ok(await _reviewService.GetAllReviewsAsync());
+            return Ok(await _reviewService.GetAllReviewsAsync(ProductId));
         }
 
         [HttpDelete("{id:long}")]

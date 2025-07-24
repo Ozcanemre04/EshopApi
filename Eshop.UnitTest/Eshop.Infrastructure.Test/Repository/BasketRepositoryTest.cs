@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Eshop.Application.Dtos.Response.BasketProduct;
 using Eshop.Domain.Entities;
 using Eshop.Infrastructure.Data;
 using Eshop.Infrastructure.Repository;
@@ -26,23 +27,24 @@ namespace Eshop.Infrastructure.Test.Repository
         {
             // arrange 
             var userId = "bad206e0-3980-4746-893b-80afc748dfea";
-            var baskets = BasketFixture.allBasket();
+            var basketsdto = BasketDtoFixtureInfra.AllProductInBasket();
+            var baskets = BasketFixture.allBasket().ToList();
             _context.Setup(p => p.Baskets).ReturnsDbSet(baskets);
             var basketRepository = new BasketRepository(_context.Object);
             // act
             var result = await basketRepository.GetAllAsync(userId);
             // asssert
             Assert.NotNull(result);
-            Assert.IsType<Basket>(result);
-            Assert.Equal(baskets.First().Id, result.Id);
-            Assert.Equal(baskets.First().UserId, result.UserId);
-            Assert.Equal(baskets.First().BasketProducts.Count(), result.BasketProducts.Count());
+            Assert.IsType<BasketDtoResponse>(result);
+            Assert.NotNull(result.BasketProductDtoResponses);
+            Assert.IsType<List<BasketProductDtoResponse>>(result.BasketProductDtoResponses);
+            Assert.Equal(basketsdto.UserId, result.UserId);
         }
         [Fact]
         public async Task GetOneAsync_ShouldReturnOneReviewById()
         {
             // arrange 
-            var userId = "bad206e0-3980-4746-893b-80afc748dfea";
+            var userId = "ask";
             var baskets = BasketFixture.allBasket();
             _context.Setup(p => p.Baskets).ReturnsDbSet(baskets);
             var basketRepository = new BasketRepository(_context.Object);

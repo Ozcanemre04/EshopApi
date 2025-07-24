@@ -61,7 +61,7 @@ namespace Eshop.Infrastructure.Services
             response.Message = "Success";
             response.AccessToken = token;
             response.refreshToken = _tokenService.GenerateRefreshToken();
-            response.Email = loginDtoRequest.Email;
+            
 
             Identity.Refreshtoken = response.refreshToken;
             Identity.RefreshTokenExpireTime = DateTime.UtcNow.AddHours(12);

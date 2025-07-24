@@ -10,6 +10,6 @@ namespace Eshop.Application.Dtos.Response.Auth
         public string? Message { get; set; }
         public string? AccessToken { get; set; }
         public string? refreshToken { get; set; }
-        public string? Email {get; set;}
+        
     }
 }

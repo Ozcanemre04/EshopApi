@@ -9,7 +9,7 @@ namespace Eshop.Application.Dtos.Response.Product
 {
     public class ProductDtoResponse : BaseDto
     {
-     
+
         public required string Name { get; set; }
         public required string Description { get; set; }
         public required decimal Price { get; set; }
@@ -17,6 +17,7 @@ namespace Eshop.Application.Dtos.Response.Product
         public required string Image { get; set; }
         public required string CategoryName { get; set; }
         public required long CategoryId { get; set; }
+        public double? Ratings { get; set; }
         
        
     }

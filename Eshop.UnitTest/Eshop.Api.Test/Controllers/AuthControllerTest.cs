@@ -187,7 +187,6 @@ namespace Eshop.Api.Test.Controllers
         Message = "Success",
         AccessToken = "t3yaIv2wliglfTFIwHJh1xL4qgX7ZE4PRLt5lhd3XKp452GpsUP84p0ooh2f5T9m4sp96q2Eo8YZtb3wSjze07u9EiFvPlKBv3CR8",
         refreshToken = "tq5LXur7lk5geR4dC4IHa9Sf8avKhhlZCO1YWqgA3cVz4IP2JxbgoQtTUKk3PHPPj0wmHT6vOp0mibFxqtLUEyBdPjaZ6l6OaMOYb",
-        Email = "Xxxx@hotmail.com",
       };
       _authService.Setup(t => t.Login(LoginRequest)).ReturnsAsync(loginResponse);
       //act
@@ -196,7 +195,6 @@ namespace Eshop.Api.Test.Controllers
       var okResult = Assert.IsType<OkObjectResult>(response.Result);
       var Value = Assert.IsType<LoginDtoResponse>(okResult.Value);
       Assert.NotNull(Value);
-      Assert.Equal("Xxxx@hotmail.com", Value.Email);
       Assert.Equal("Success", Value.Message);
       Assert.Equal("t3yaIv2wliglfTFIwHJh1xL4qgX7ZE4PRLt5lhd3XKp452GpsUP84p0ooh2f5T9m4sp96q2Eo8YZtb3wSjze07u9EiFvPlKBv3CR8", Value.AccessToken);
     }
@@ -291,7 +289,7 @@ namespace Eshop.Api.Test.Controllers
         Message = "Success",
         AccessToken = "t3yaIv2wliglfTFIwHJh1xL4qgX7ZE4PRLt5lhd3XKp452GpsUP84p0ooh2f5T9m4sp96q2Eo8YZtb3wSjze07u9EiFvPlKBv3CR8",
         refreshToken = "tq5LXur7lk5geR4dC4IHa9Sf8avKhhlZCO1YWqgA3cVz4IP2JxbgoQtTUKk3PHPPj0wmHT6vOp0mibFxqtLUEyBdPjaZ6l6OaMOYb",
-        Email = "Xxxx@hotmail.com",
+       
       };
       _authService.Setup(t => t.RefreshToken(RefreshTokenRequest)).ReturnsAsync(loginResponse);
       //act
@@ -300,7 +298,6 @@ namespace Eshop.Api.Test.Controllers
       var okResult = Assert.IsType<OkObjectResult>(response.Result);
       var Value = Assert.IsType<LoginDtoResponse>(okResult.Value);
       Assert.NotNull(Value);
-      Assert.Equal("Xxxx@hotmail.com", Value.Email);
       Assert.Equal("Success", Value.Message);
       Assert.Equal("t3yaIv2wliglfTFIwHJh1xL4qgX7ZE4PRLt5lhd3XKp452GpsUP84p0ooh2f5T9m4sp96q2Eo8YZtb3wSjze07u9EiFvPlKBv3CR8", Value.AccessToken);
     }

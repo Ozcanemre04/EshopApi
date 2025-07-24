@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Eshop.Api.Controllers;
 using Eshop.Application.Dtos.Request.Review;
+using Eshop.Application.Dtos.Response.Commun;
 using Eshop.Application.Dtos.Response.Review;
 using Eshop.Application.Interfaces.Service;
 using Eshop.Application.Test.Fixture;
@@ -29,14 +30,14 @@ namespace Eshop.Api.Test.Controllers
         public async void GetAllReviews_ReturnsOKResult_WithReviews()
         {
             //arrange
-            _reviewServiceMock.Setup(t => t.GetAllReviewsAsync()).ReturnsAsync(ReviewDtoFixture.ReviewList);
+            _reviewServiceMock.Setup(t => t.GetAllReviewsAsync(1)).ReturnsAsync(ReviewDtoFixture.ReviewList().Where(x=>x.ProductId==1).ToList());
             //act
-            var response = await _reviewControllerMock.GetAllReviews();
+            var response = await _reviewControllerMock.GetAllReviews(1);
             //assert
             var okResult = Assert.IsType<OkObjectResult>(response.Result);
             var value = Assert.IsType<List<ReviewDtoResponse>>(okResult.Value);
             Assert.NotNull(value);
-            Assert.Equal(2, value.Count);
+            Assert.Equal(1, value.Count);
         }
 
 
@@ -46,14 +47,15 @@ namespace Eshop.Api.Test.Controllers
         {
             //arrange
             long reviewId = 1;
-            _reviewServiceMock.Setup(t => t.DeleteReviewAsync(ReviewDtoFixture.ReviewList().First().Id)).ReturnsAsync("review is deleted");
+            var message = new MessageDto { Message = "review is deleted" };
+            _reviewServiceMock.Setup(t => t.DeleteReviewAsync(ReviewDtoFixture.ReviewList().First().Id)).ReturnsAsync(message);
             //act
             var response = await _reviewControllerMock.DeleteReview(reviewId);
             //assert
             var okResult = Assert.IsType<OkObjectResult>(response.Result);
-            var Value = Assert.IsType<string>(okResult.Value);
+            var Value = Assert.IsType<MessageDto>(okResult.Value);
             Assert.NotNull(Value);
-            Assert.Equal("review is deleted", Value);
+            Assert.Equal(message.Message, Value.Message);
 
         }
         [Fact]

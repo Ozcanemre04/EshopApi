@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Eshop.Application.Dtos.Request.Product;
 using Eshop.Application.Dtos.Response.Commun;
 using Eshop.Application.Dtos.Response.Product;
@@ -20,7 +16,7 @@ namespace Eshop.Api.Controllers
         private readonly IProductService _productService;
         public ProductController(IProductService productService)
         {
-            _productService = productService;
+            _productService = productService; 
         }
 
         [HttpGet()]
@@ -30,6 +26,7 @@ namespace Eshop.Api.Controllers
 
             try
             {
+                
                 return Ok(await _productService.GetAllProductAsync(pageNumber, pageSize,category,search,order_type,asc));
 
             }

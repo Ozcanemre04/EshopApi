@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Eshop.Application.Dtos.Request.BasketProduct;
 using Eshop.Application.Dtos.Response.BasketProduct;
+using Eshop.Application.Dtos.Response.Commun;
 using Eshop.Application.Interfaces.Service;
 using Eshop.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
@@ -43,7 +44,7 @@ namespace Eshop.Api.Controllers
         }
 
         [HttpDelete("{id:long}")]
-        public async Task<ActionResult<IEnumerable<BasketProductDtoResponse>>> DeleteProductInBasketAsync([FromRoute] long id)
+        public async Task<ActionResult<MessageDto>> DeleteProductInBasketAsync([FromRoute] long id)
         {
             try
             {
@@ -63,7 +64,7 @@ namespace Eshop.Api.Controllers
         }
 
         [HttpPut("increase/{id:long}")]
-        public async Task<ActionResult<IEnumerable<BasketProductDtoResponse>>> IncreaseQuantityProductInBasketAsync([FromRoute] long id)
+        public async Task<ActionResult<BasketProductDtoResponse>> IncreaseQuantityProductInBasketAsync([FromRoute] long id)
         {
             try
             {
@@ -85,7 +86,7 @@ namespace Eshop.Api.Controllers
         }
 
         [HttpPut("decrease/{id:long}")]
-        public async Task<ActionResult<IEnumerable<BasketProductDtoResponse>>> DecreaseQuantityProductInBasketAsync([FromRoute] long id)
+        public async Task<ActionResult<BasketProductDtoResponse>> DecreaseQuantityProductInBasketAsync([FromRoute] long id)
         {
             try
             {
@@ -106,7 +107,7 @@ namespace Eshop.Api.Controllers
             }
         }
         [HttpPost()]
-        public async Task<ActionResult<IEnumerable<BasketProductDtoResponse>>> CreateProductInBasketAsync([FromBody] BasketProductDtoCreateRequest basketProductDtoCreateRequest)
+        public async Task<ActionResult<BasketProductDtoResponse>> CreateProductInBasketAsync([FromBody] BasketProductDtoCreateRequest basketProductDtoCreateRequest)
         {
             try
             {

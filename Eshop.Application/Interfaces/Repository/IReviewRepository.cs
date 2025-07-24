@@ -8,7 +8,7 @@ namespace Eshop.Application.Interfaces.Repository
 {
     public interface IReviewRepository
     {
-        Task<IEnumerable<Review>> GetAllAsync();
+        Task<IEnumerable<Review>> GetAllAsync(long productid);
         Task<Review> GetOneAsync(long id);
         Task<Review> CreateAsync(Review review);
         Task<bool> DeleteAsync(long id);

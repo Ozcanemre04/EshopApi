@@ -34,11 +34,12 @@ namespace Eshop.Infrastructure.Repository
             return true;
         }
 
-        public async Task<IEnumerable<Review>> GetAllAsync()
+        public async Task<IEnumerable<Review>> GetAllAsync(long productid)
         {
-            return await _appDbContext.Reviews.AsNoTracking().ToListAsync();
+            return await _appDbContext.Reviews.AsNoTracking().Where(x=>x.ProductId==productid).ToListAsync();
 
         }
+       
 
         public async Task<Review> GetOneAsync(long id)
         {

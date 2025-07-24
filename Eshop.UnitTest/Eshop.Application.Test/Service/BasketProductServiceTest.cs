@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Eshop.Application.Dtos.Request.BasketProduct;
 using Eshop.Application.Dtos.Response.BasketProduct;
+using Eshop.Application.Dtos.Response.Commun;
 using Eshop.Application.Interfaces.Repository;
 using Eshop.Application.Interfaces.Service;
 using Eshop.Application.Mapper;
@@ -41,7 +42,8 @@ namespace Eshop.Application.Test.Service
         public async Task GetAllBasketProductAsync_ShouldBasketDtoResponse()
         {
             //arrange
-            var basket = BasketFixture.allBasket().First();
+            
+            var basket = BasketDtoFixture.AllProductInBasket();
             _currentUserServiceMock.Setup(x => x.UserId).Returns(basket.UserId);
             _basketRepositoryMock.Setup(p => p.GetAllAsync(basket.UserId)).ReturnsAsync(basket);
             //act
@@ -59,6 +61,7 @@ namespace Eshop.Application.Test.Service
         {
             //arrange
             long basketId = 1;
+            var message = new MessageDto { Message = "product is deleted" };
             var basket = BasketProductFixture.AllProductInBasket().FirstOrDefault(x => x.Id == basketId);
             _currentUserServiceMock.Setup(u => u.UserId).Returns("bad206e0-3980-4746-893b-80afc748dfea");
             _basketProductRepositoryMock.Setup(p => p.GetOneAsync(basketId)).ReturnsAsync(basket);
@@ -67,8 +70,8 @@ namespace Eshop.Application.Test.Service
             var result = await _basketProductService.DeleteBasketProductAsync(basketId);
             //assert
             Assert.NotNull(result);
-            Assert.IsType<string>(result);
-            Assert.Equal("product is deleted", result);
+            Assert.IsType<MessageDto>(result);
+            Assert.Equal(message.Message, result.Message);
             _basketProductRepositoryMock.Verify(p => p.GetOneAsync(basketId), Times.Once);
             _basketProductRepositoryMock.Verify(p => p.DeleteAsync(basketId), Times.Once);
         }

@@ -2,6 +2,8 @@ using Eshop.Application.DependencyInjection;
 using Eshop.Infrastructure.DependencyInjection;
 using Eshop.Api.Services;
 using Microsoft.OpenApi.Models;
+using Stripe;
+using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
@@ -47,6 +53,12 @@ options.AddPolicy("first",builder =>
 }));
 builder.Services.InfrastructureService(builder.Configuration);
 builder.Services.ApplicationService();
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<BrotliCompressionProvider>();
+    options.Providers.Add<GzipCompressionProvider>(); 
+});
 var app = builder.Build();
 DatabaseManagementService.MigrationInitialisation(app);
 
@@ -64,4 +76,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseResponseCompression();
 app.Run();

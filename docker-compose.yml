@@ -1,6 +1,6 @@
 # Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
 
-version: '3.8'
+version: '4.4'
 networks:
  backend:
     driver: bridge
@@ -31,6 +31,8 @@ services:
        - Admin__Refreshtoken=${Admin__Refreshtoken}
        - Admin__Password=${Admin__Password}
        - Admin__Id=${Admin__Id}
+       - Url__Domain=${Url__Domain}
+       - Stripe__SecretKey=${Stripe__SecretKey}
     networks:
       - backend
 

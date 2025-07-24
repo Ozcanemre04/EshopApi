@@ -13,8 +13,8 @@ namespace Eshop.Application.Validations.Reviews
         {
             RuleFor(request => request.Reviews)
             .NotNull()
-            .WithMessage("Review text is required.")
-            .Length(10, 400).WithMessage("character length of reviews must be between 10 and 200");
+            .WithMessage("Review text is required.");
+           
 
             RuleFor(request => request.Stars)
                 .NotEmpty().WithMessage("Stars are required")

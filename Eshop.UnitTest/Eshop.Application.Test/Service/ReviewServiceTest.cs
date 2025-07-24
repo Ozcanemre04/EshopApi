@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Eshop.Application.Dtos.Request.Review;
+using Eshop.Application.Dtos.Response.Commun;
 using Eshop.Application.Dtos.Response.Review;
 using Eshop.Application.Interfaces.Repository;
 using Eshop.Application.Interfaces.Service;
@@ -38,14 +39,14 @@ namespace Eshop.Application.Test.Service
         public async Task GetAllReviewsAsync_ShouldReturnListOfReviewDtoResponse()
         {
             //arrange
-            _reviewRepositoryMock.Setup(p => p.GetAllAsync()).ReturnsAsync(ReviewFixture.ReviewList());
+            _reviewRepositoryMock.Setup(p => p.GetAllAsync(1)).ReturnsAsync(ReviewFixture.ReviewList().Where(x=>x.ProductId==1).ToList());
             //act
-            var result = await _reviewService.GetAllReviewsAsync();
+            var result = await _reviewService.GetAllReviewsAsync(1);
             //assert
             Assert.NotNull(result);
             Assert.IsType<List<ReviewDtoResponse>>(result);
             Assert.NotEmpty(result);
-            Assert.Equal(ReviewFixture.ReviewList().Count(), result.Count());
+            Assert.Equal(ReviewFixture.ReviewList().Where(x=>x.ProductId==1).Count(), result.Count());
         }
 
         //delete
@@ -54,6 +55,7 @@ namespace Eshop.Application.Test.Service
         {
             //arrange
             long reviewId = 1;
+            var message = new MessageDto { Message = "review is deleted" };
             var review = ReviewFixture.ReviewList().FirstOrDefault(x => x.Id == reviewId);
             _currentUserServiceMock.Setup(u => u.UserId).Returns(review.UserId);
             _reviewRepositoryMock.Setup(p => p.GetOneAsync(reviewId)).ReturnsAsync(review);
@@ -62,8 +64,8 @@ namespace Eshop.Application.Test.Service
             var result = await _reviewService.DeleteReviewAsync(reviewId);
             //assert
             Assert.NotNull(result);
-            Assert.IsType<string>(result);
-            Assert.Equal("review is deleted", result);
+            Assert.IsType<MessageDto>(result);
+            Assert.Equal(message.Message, result.Message);
         }
         [Fact]
         public async Task DeleteReviewAsync_ShouldThrowKeyNotFoundException_whenReviewDoesNotExist()

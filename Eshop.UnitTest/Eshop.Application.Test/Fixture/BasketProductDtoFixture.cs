@@ -17,7 +17,10 @@ namespace Eshop.Application.Test.Fixture
                      Quantity =1,
                      TotalPrice = 159.56m,
                      ProductId =1,
-                     BasketId =1
+                     BasketId =1,
+                     Stock=120,
+                     Image="image",
+                     ProductName="necklace"
                 },
                 new BasketProductDtoResponse(){
                      Id = 2,
@@ -25,7 +28,10 @@ namespace Eshop.Application.Test.Fixture
                      Quantity =1,
                      TotalPrice = 100,
                      ProductId =1,
-                     BasketId =1
+                     BasketId =1,
+                     Stock=120,
+                     Image="image",
+                     ProductName="necklace"
                 },
             };
         }

@@ -7,6 +7,7 @@ using Eshop.Domain.Entities;
 using Eshop.Infrastructure.Data;
 using Eshop.Infrastructure.Repository;
 using Eshop.Infrastructure.Test.Fixture;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.EntityFrameworkCore;
@@ -82,7 +83,7 @@ namespace Eshop.Infrastructure.Test.Repository
         public async Task GetAllAsync_ShouldReturnPagedProducts_WhenCategoryIsAll()
         {
             // arrange 
-            int pageNumber = 1;
+            int pageNumber = 0;
             int pageSize = 10;
             string search = "";
             string order_type = "";
@@ -90,7 +91,7 @@ namespace Eshop.Infrastructure.Test.Repository
             _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
             var productrepository = new ProductRepository(_context.Object);
             // act
-            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"All",search,order_type,asc);
+            var result = await productrepository.GetAllComplexAsync(pageNumber, pageSize,"All",search,order_type,asc);
             // asssert
             Assert.NotNull(result);
             Assert.IsType<List<Product>>(result);
@@ -100,7 +101,7 @@ namespace Eshop.Infrastructure.Test.Repository
         public async Task GetAllAsync_ShouldReturnPagedProducts_WhenSearchFilterIsUsed()
         {
             // arrange 
-            int pageNumber = 1;
+            int pageNumber = 0;
             int pageSize = 10;
             string search = "ung";
             string order_type = "";
@@ -108,7 +109,7 @@ namespace Eshop.Infrastructure.Test.Repository
             _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
             var productrepository = new ProductRepository(_context.Object);
             // act
-            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"All",search,order_type,asc);
+            var result = await productrepository.GetAllComplexAsync(pageNumber, pageSize,"All",search,order_type,asc);
             // asssert
             Assert.NotNull(result);
             Assert.IsType<List<Product>>(result);
@@ -118,15 +119,15 @@ namespace Eshop.Infrastructure.Test.Repository
         public async Task GetAllAsync_ShouldReturnPagedProducts_WhenPriceSortDescIsUsed()
         {
             // arrange 
-            int pageNumber = 1;
+            int pageNumber = 0;
             int pageSize = 10;
-            string search = "";
+            string search ="";
             string order_type = "price";
             bool asc = false;
             _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
             var productrepository = new ProductRepository(_context.Object);
             // act
-            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"All",search,order_type,asc);
+            var result = await productrepository.GetAllComplexAsync(pageNumber, pageSize,"All",search,order_type,asc);
             // asssert
             Assert.NotNull(result);
             Assert.IsType<List<Product>>(result);
@@ -138,12 +139,12 @@ namespace Eshop.Infrastructure.Test.Repository
         public async Task GetAllAsync_ShouldReturnPagedProducts_WhenCategoryIsSmartphone()
         {
             // arrange 
-            int pageNumber = 1;
+            int pageNumber = 0;
             int pageSize = 10;
             _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
             var productrepository = new ProductRepository(_context.Object);
             // act
-            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"Smartphone","","",true);
+            var result = await productrepository.GetAllComplexAsync(pageNumber, pageSize,"Smartphone","","",true);
             // asssert
             Assert.NotNull(result);
             Assert.IsType<List<Product>>(result);
@@ -153,12 +154,12 @@ namespace Eshop.Infrastructure.Test.Repository
         public async Task GetAllAsync_ShouldReturnPagedProductsWithEmptyProduct_WhenCategoryDoesNotExist()
         {
             // arrange 
-            int pageNumber = 1;
+            int pageNumber = 0;
             int pageSize = 10;
             _context.Setup(p => p.Products).ReturnsDbSet(ProductFixture.getAllProducts());
             var productrepository = new ProductRepository(_context.Object);
             // act
-            var result = await productrepository.GetAllAsync(pageNumber, pageSize,"hello","","",true);
+            var result = await productrepository.GetAllComplexAsync(pageNumber, pageSize,"hello","","",true);
             // asssert
             Assert.NotNull(result);
             Assert.IsType<List<Product>>(result);

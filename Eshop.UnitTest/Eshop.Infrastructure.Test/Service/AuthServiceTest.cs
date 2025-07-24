@@ -144,7 +144,6 @@ namespace Eshop.Infrastructure.Test.Service
                 AccessToken = "JkqU9yzXhHDQxLv3Pc9ZBKeWe3QmiH3QrFvX47fX57u6MRWtCzXsvSSER8EAcgai",
                 refreshToken = "JkqU9yzXhHDQxLv3Pc9ZBKeWe3QmiH3QrFvX47fX57u6MRWtCzXsvSSER8EAcgai",
                 Message = "Success",
-                Email = "emre@live.be"
             };
             
             _tokenServiceMock.Setup(x => x.GenerateToken(user)).ReturnsAsync(loginDtoResponse.AccessToken);
@@ -159,7 +158,6 @@ namespace Eshop.Infrastructure.Test.Service
             //assert
             Assert.NotNull(result);
             Assert.IsType<LoginDtoResponse>(result);
-            Assert.Equal(loginDtoResponse.Email, result.Email);
             Assert.Equal(loginDtoResponse.Message, result.Message);
             Assert.Equal(loginDtoResponse.refreshToken, result.refreshToken);
             Assert.Equal(loginDtoResponse.AccessToken, result.AccessToken);
@@ -188,7 +186,6 @@ namespace Eshop.Infrastructure.Test.Service
                 AccessToken = "JkqU9yzXhHDQxLv3Pc9ZBKeWe3QmiH3QrFvX47fX57u6MRWtCzXsvSSER8EAcgai",
                 refreshToken = "JkqU9yzXhHDQxLv3Pc9ZBKeWe3QmiH3QrFvX47fX57u6MRWtCzXsvSSER8EAcgai",
                 Message = "Success",
-                Email = "emre@live.be"
             };
             var basket = new Basket 
                 {   Id=1,
@@ -207,7 +204,6 @@ namespace Eshop.Infrastructure.Test.Service
             //assert
             Assert.NotNull(result);
             Assert.IsType<LoginDtoResponse>(result);
-            Assert.Equal(loginDtoResponse.Email, result.Email);
             Assert.Equal(loginDtoResponse.Message, result.Message);
             Assert.Equal(loginDtoResponse.refreshToken, result.refreshToken);
             Assert.Equal(loginDtoResponse.AccessToken, result.AccessToken);
@@ -279,7 +275,7 @@ namespace Eshop.Infrastructure.Test.Service
                 AccessToken = "JkqU9yzXhHDQxLv3Pc9ZBKeWe3QmiH3QrFvX47fX57u6MRWtCzXsvSSER8EAcgai",
                 refreshToken = "JkqU9yzXhHDQxLv3Pc9ZBKeWe3QmiH3QrFvX47fX57u6MRWtCzXsvSSER8EAcgai",
                 Message = "Success",
-                Email = null
+                
             };
              _tokenServiceMock.Setup(x => x.GenerateToken(user)).ReturnsAsync(loginDtoResponse.AccessToken);
              _tokenServiceMock.Setup(x => x.GenerateRefreshToken()).Returns(loginDtoResponse.refreshToken);
@@ -289,7 +285,7 @@ namespace Eshop.Infrastructure.Test.Service
             // assert
             Assert.NotNull(result);
             Assert.Equal("Success", result.Message);
-            Assert.Null(result.Email);
+            
             Assert.Equal("JkqU9yzXhHDQxLv3Pc9ZBKeWe3QmiH3QrFvX47fX57u6MRWtCzXsvSSER8EAcgai", result.AccessToken);
             Assert.Equal("JkqU9yzXhHDQxLv3Pc9ZBKeWe3QmiH3QrFvX47fX57u6MRWtCzXsvSSER8EAcgai", result.refreshToken);
         }

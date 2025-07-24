@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Eshop.Api.Controllers;
 using Eshop.Application.Dtos.Request.BasketProduct;
 using Eshop.Application.Dtos.Response.BasketProduct;
+using Eshop.Application.Dtos.Response.Commun;
 using Eshop.Application.Interfaces.Service;
 using Eshop.Application.Test.Fixture;
 using Microsoft.AspNetCore.Mvc;
@@ -57,15 +58,16 @@ namespace Eshop.Api.Test.Controllers
         {
             //arrange
             long basketId = 1;
-            _BasketProductServiceMock.Setup(t => t.DeleteBasketProductAsync(1)).ReturnsAsync("product is deleted");
+            var message = new MessageDto { Message = "product is deleted" };
+            _BasketProductServiceMock.Setup(t => t.DeleteBasketProductAsync(1)).ReturnsAsync(message);
             //act
             var response = await _basketControllerMock.DeleteProductInBasketAsync(basketId);
             //assert
             var okResult = Assert.IsType<OkObjectResult>(response.Result);
 
-            var Value = Assert.IsType<string>(okResult.Value);
+            var Value = Assert.IsType<MessageDto>(okResult.Value);
             Assert.NotNull(Value);
-            Assert.Equal("product is deleted", Value);
+            Assert.Equal(message.Message, Value.Message);
         }
 
         [Fact]
@@ -99,7 +101,8 @@ namespace Eshop.Api.Test.Controllers
                 Quantity = 1,
                 TotalPrice = 100,
                 ProductId = 1,
-                BasketId = 1
+                BasketId = 1,
+                Stock=120
             };
             _BasketProductServiceMock.Setup(t => t.CreateBasketProductAsync(BasketProductCreate)).ReturnsAsync(BasketProductResponse);
             // act
@@ -200,7 +203,8 @@ namespace Eshop.Api.Test.Controllers
                 Quantity = 1,
                 TotalPrice = 100,
                 ProductId = 1,
-                BasketId = 1
+                BasketId = 1,
+                Stock = 120
             };
             _BasketProductServiceMock.Setup(t => t.IncreaseQuantityAsync(basketId)).ReturnsAsync(BasketProductResponse);
             // act
@@ -210,6 +214,7 @@ namespace Eshop.Api.Test.Controllers
             var Value = Assert.IsType<BasketProductDtoResponse>(okResult.Value);
             Assert.NotNull(Value);
             Assert.Equal(2, Value.Id);
+            Assert.Equal(120, Value.Stock);
 
         }
         [Fact]
@@ -269,7 +274,8 @@ namespace Eshop.Api.Test.Controllers
                 Quantity = 1,
                 TotalPrice = 100,
                 ProductId = 1,
-                BasketId = 1
+                BasketId = 1,
+                Stock= 120
             };
             _BasketProductServiceMock.Setup(t => t.DecreaseQuantityAsync(basketId)).ReturnsAsync(BasketProductResponse);
             // act
@@ -279,6 +285,7 @@ namespace Eshop.Api.Test.Controllers
             var Value = Assert.IsType<BasketProductDtoResponse>(okResult.Value);
             Assert.NotNull(Value);
             Assert.Equal(2, Value.Id);
+            Assert.Equal(120, Value.Stock);
 
         }
         [Fact]

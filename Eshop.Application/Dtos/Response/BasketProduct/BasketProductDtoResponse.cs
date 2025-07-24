@@ -11,8 +11,11 @@ namespace Eshop.Application.Dtos.Response.BasketProduct
     {
         public required int Quantity { get; set; }
         public decimal TotalPrice {get;set;}
-        public required long ProductId { get; set; }
-
+        public decimal Price {get;set;}
+        public  long ProductId { get; set; }
+        public  string? ProductName { get; set; }
+        public  string? Image { get; set; }
+        public required int Stock { get; set; }
         public required long BasketId { get; set; }
 
     }

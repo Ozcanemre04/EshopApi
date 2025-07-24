@@ -13,8 +13,32 @@ namespace Eshop.Infrastructure.Test.Fixture
             return new List<Basket>{
                 new Basket 
                 {   Id=1,
-                    UserId = "bad206e0-3980-4746-893b-80afc748dfea", 
-                    BasketProducts= BasketProductFixture.AllProductInBasket()
+                    UserId = "ask", 
+                    BasketProducts= new List<BasketProduct>{
+                new BasketProduct(){
+                     Id = 1,
+                     CreatedDate =DateTime.Now,
+                     Quantity = 1,
+                     TotalPrice = 159.56m,
+                     ProductId = 1,
+                     BasketId =1,
+                     Basket = new Basket{
+                        UserId="ask"
+                     },
+                },
+                new BasketProduct(){
+                     Id = 2,
+                     CreatedDate =DateTime.Now,
+                     Quantity =1,
+                     TotalPrice = 100m,
+                     ProductId =1,
+                     BasketId =1,
+                     Basket = new Basket{
+                        UserId="bad206e0-3980-4746-893b-80afc748dfea"
+                     },
+                     
+                },
+            }
                 },
                 new Basket 
                 {   Id=2,

@@ -55,7 +55,7 @@ namespace Eshop.Infrastructure.Services
 
             var securityToken = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(120),
+                expires: DateTime.UtcNow.AddMinutes(1),
                 issuer: _config.GetSection("JWT:Issuer").Value,
                 audience: _config.GetSection("JWT:Audience").Value,
                 signingCredentials: signingCred);

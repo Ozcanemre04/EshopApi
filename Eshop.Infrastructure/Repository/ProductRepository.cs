@@ -49,7 +49,7 @@ namespace Eshop.Infrastructure.Repository
 
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync(int pageNumber, int pageSize, string category, string search,
+        public async Task<IEnumerable<Product>> GetAllComplexAsync(int pageNumber, int pageSize, string category, string search,
         string? order_type,bool asc)
         {
             IQueryable<Product> query = filterProduct(category, search);
@@ -68,6 +68,18 @@ namespace Eshop.Infrastructure.Repository
             query = query.Skip(pageNumber * pageSize).Take(pageSize).Include(x => x.category);
             return await query.ToListAsync();
         }
+        public  async Task<double?> AverageRatings(long id)
+        {
+            var query =  await _appDbContext.Products.Include(p=>p.Reviews).Where(x=>x.Id==id).Select(x=> new AverageRatingsDtoResponse
+            {
+                Id = x.Id,
+                Sum = x.Reviews.Where(r => r.ProductId == id).Sum(r => r.Stars),
+                Count = x.Reviews.Where(r => r.ProductId == id).Count(),
+            }).FirstOrDefaultAsync(r => r.Id == id);
+        
+            return query.Average;
+            
+        }
 
         public async Task<Product> GetOneAsync(long id)
         {
@@ -81,5 +93,7 @@ namespace Eshop.Infrastructure.Repository
             await _appDbContext.SaveChangesAsync();
             return product;
         }
+
+        
     }
 }
