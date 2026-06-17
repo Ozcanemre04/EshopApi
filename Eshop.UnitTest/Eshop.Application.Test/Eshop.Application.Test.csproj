@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Eshop.Infrastructure.Test/Eshop.Infrastructure.Test.csproj" />
-    <ProjectReference Include="..\..\Eshop.Application\Eshop.Application.csproj" />
+    <ProjectReference Include="..\..\src\Eshop.Application\Eshop.Application.csproj" />
   </ItemGroup>
 
 </Project>

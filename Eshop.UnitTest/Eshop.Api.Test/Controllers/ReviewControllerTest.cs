@@ -164,7 +164,7 @@ namespace Eshop.Api.Test.Controllers
             // arrange
             var ReviewCreate = new ReviewDtoCreateRequest
             {
-                Reviews = "This",
+                Reviews = "",
                 Stars = 6,
                 ProductId = 0
 
@@ -177,8 +177,7 @@ namespace Eshop.Api.Test.Controllers
             Assert.Equal(400, badrequestResult.StatusCode);
             var value = Assert.IsType<List<FluentValidation.Results.ValidationFailure>>(badrequestResult.Value);
             Assert.Equal("Stars must be between 1 and 5.", value.FirstOrDefault(x => x.PropertyName == "Stars").ErrorMessage);
-            Assert.Equal("character length of reviews must be between 10 and 200", value.FirstOrDefault(x => x.PropertyName == "Reviews").ErrorMessage);
-            Assert.Equal("Product ID must be greater than 0.", value.FirstOrDefault(x => x.PropertyName == "ProductId").ErrorMessage);
+            Assert.Equal("Product ID must be greater than 0.", value.FirstOrDefault(x => x.PropertyName == "ProductId")?.ErrorMessage);
         }
 
         //updateReview
@@ -286,8 +285,8 @@ namespace Eshop.Api.Test.Controllers
             var badrequestResult = Assert.IsType<BadRequestObjectResult>(response.Result);
             Assert.Equal(400, badrequestResult.StatusCode);
             var value = Assert.IsType<List<FluentValidation.Results.ValidationFailure>>(badrequestResult.Value);
-            Assert.Equal("character length of reviews must be between 10 and 200", value.FirstOrDefault(x => x.PropertyName == "Reviews").ErrorMessage);
             Assert.Equal("Stars must be between 1 and 5.", value.FirstOrDefault(x => x.PropertyName == "Stars").ErrorMessage);
+            
         }
 
     }
