@@ -24,7 +24,8 @@
 
 ## Architecture
 
-EshopApi
+```text
+- EshopApi
 ├── Eshop.UnitTest
 │   ├── Eshop.Api.Test
 │   ├── Eshop.Application.Test
@@ -34,6 +35,7 @@ EshopApi
     ├── Eshop.Application
     ├── Eshop.Domain
     └── Eshop.Infrastructure
+```
 
 ## Prerequisites
 
