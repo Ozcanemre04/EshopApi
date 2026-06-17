@@ -25,7 +25,7 @@
 ## Architecture
 
 ```text
-- EshopApi
+EshopApi
 ├── Eshop.UnitTest
 │   ├── Eshop.Api.Test
 │   ├── Eshop.Application.Test
