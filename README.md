@@ -46,7 +46,7 @@ EshopApi
 - Create a `.env` file in the root of the project:
 
   ### Database:
-  
+
   ConnectionStrings__DefaultConnection=Host=your-Postgres-Host;Port=your-Postgres-Port;Database=your-Postgres-DB;Username=your-Postgres-Username;Password=your-Postgres-Password
   POSTGRES_USER=your-Postgres-User
   POSTGRES_PASSWORD=your-Postgres-Password
@@ -79,15 +79,15 @@ EshopApi
 
 1. Clone repository
 
-git clone https://github.com/username/eshop.git
+   git clone https://github.com/Ozcanemre04/EshopApi.git
 
 2. Navigate to project
 
-cd eshop
+   cd eshop
 
 3. Build project in Docker
 
-docker compose up --build
+   docker compose up --build
 
 
 ## API Documentation
