@@ -47,33 +47,33 @@ EshopApi
 
   ### Database:
 
-  ConnectionStrings__DefaultConnection=Host=your-Postgres-Host;Port=your-Postgres-Port;Database=your-Postgres-DB;Username=your-Postgres-Username;Password=your-Postgres-Password
-  POSTGRES_USER=your-Postgres-User
-  POSTGRES_PASSWORD=your-Postgres-Password
-  POSTGRES_DB=your-Postgres-DB
+  - ConnectionStrings__DefaultConnection=Host=your-Postgres-Host;Port=your-Postgres-Port;    Database=your-Postgres-DB;Username=your-Postgres-Username;Password=your-Postgres-Password
+  - POSTGRES_USER=your-Postgres-User
+  - POSTGRES_PASSWORD=your-Postgres-Password
+  - POSTGRES_DB=your-Postgres-DB
 
   ### JWT:
 
-  JWT__Key=a-string-secret-at-least-512-bits-long
-  JWT__Issuer=your-app-url
-  JWT__Audience=your-app-users-url
+  - JWT__Key=a-string-secret-at-least-512-bits-long
+  - JWT__Issuer=your-app-url
+  - JWT__Audience=your-app-users-url
 
   ### Api:
-  AspnetCoreUrl=your-Url
+  - AspnetCoreUrl=your-Url
 
   ### Admin:
 
-  Admin__FirstName=your-admin-Firstname
-  Admin__LastName=your-admin-Lastname
-  Admin__Email=your-admin-Email
-  Admin__UserName=your-admin-Username
-  Admin__Refreshtoken=your-admin-Refresh-token
-  Admin__Password=your-admin-Password
-  Admin__Id=your-admin-Id
+  - Admin__FirstName=your-admin-Firstname
+  - Admin__LastName=your-admin-Lastname
+  - Admin__Email=your-admin-Email
+  - Admin__UserName=your-admin-Username
+  - Admin__Refreshtoken=your-admin-Refresh-token
+  - Admin__Password=your-admin-Password
+  - Admin__Id=your-admin-Id
 
   ### Stripe:
 
-  Stripe__SecretKey=your-Stripe-SecretKey
+  - Stripe__SecretKey=your-Stripe-SecretKey
 
 ## Installation
 
