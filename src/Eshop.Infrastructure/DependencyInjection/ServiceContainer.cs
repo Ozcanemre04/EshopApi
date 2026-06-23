@@ -52,7 +52,7 @@ namespace Eshop.Infrastructure.DependencyInjection
             }).AddJwtBearer(options =>
             {
                 options.SaveToken = true;
-                options.RequireHttpsMetadata = false;
+                options.RequireHttpsMetadata = true;
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateActor = false,
@@ -64,7 +64,7 @@ namespace Eshop.Infrastructure.DependencyInjection
                     ValidAudience = configuration.GetSection("JWT:Audience").Value,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("JWT:Key").Value)),
                     ClockSkew = TimeSpan.Zero,
-
+            
                 };
 
             });
