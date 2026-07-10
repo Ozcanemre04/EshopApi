@@ -44,7 +44,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 builder.Services.AddCors(options =>
-options.AddPolicy("first",builder =>
+options.AddPolicy("Angular",builder =>
 {
     builder.WithOrigins("http://localhost:4200")
            .AllowAnyMethod()
@@ -63,13 +63,13 @@ var app = builder.Build();
 DatabaseManagementService.MigrationInitialisation(app);
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+// }
 
-app.UseCors("first");
+app.UseCors("Angular");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

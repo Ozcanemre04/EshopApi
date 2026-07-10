@@ -25,7 +25,7 @@ namespace Eshop.Api.Controllers
             StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
             try
             {
-                var domain = _configuration["Url:Domain"];
+                var domain = _configuration["FrontEnd:Domain"];
                 var options = new SessionCreateOptions
                 {
                     PaymentMethodTypes = new List<string> { "card" },
