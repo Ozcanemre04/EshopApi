@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Eshop.Application.Dtos.Response.BasketProduct;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using Stripe.Checkout;
+using Eshop.Infrastructure.Identity;
 
 namespace Eshop.Api.Controllers
 {
     [Route("create-checkout-session")]
     [ApiController]
+    [Authorize(Roles = UserRoles.USER)]
     public class CheckoutController : ControllerBase
     {
         private readonly IConfiguration _configuration;

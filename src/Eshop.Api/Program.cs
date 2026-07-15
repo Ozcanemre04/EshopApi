@@ -44,9 +44,9 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 builder.Services.AddCors(options =>
-options.AddPolicy("Angular",builder =>
+options.AddPolicy("Angular",policyBuilder =>
 {
-    builder.WithOrigins("http://localhost:4200")
+    policyBuilder.WithOrigins(builder.Configuration["FrontEnd:Domain"]!)
            .AllowAnyMethod()
            .AllowAnyHeader()
            .AllowCredentials();
