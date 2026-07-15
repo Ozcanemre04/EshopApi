@@ -88,7 +88,7 @@ EshopApi
 
 2. Navigate to project
 
-   cd eshop
+   cd EshopApi
 
 3. Build project in Docker
 
