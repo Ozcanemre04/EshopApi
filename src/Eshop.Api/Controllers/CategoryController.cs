@@ -76,7 +76,8 @@ namespace Eshop.Api.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                return Ok(await _categoryService.CreateCategoryAsync(categoryDtoCreateRequest));
+                var category = await _categoryService.CreateCategoryAsync(categoryDtoCreateRequest);
+                return CreatedAtAction(nameof(GetOneCategory), new { id = category.Id }, category);
             }
             catch (Exception ex)
             {

@@ -123,8 +123,8 @@ namespace Eshop.Api.Test.Controllers
             // act
             var response = await _categoryController.CreateCategory(CategoryCreate);
             // assert
-            var okResult = Assert.IsType<OkObjectResult>(response.Result);
-            var Value = Assert.IsType<CategoryDtoResponse>(okResult.Value);
+            var createdResult = Assert.IsType<CreatedAtActionResult>(response.Result);
+            var Value = Assert.IsType<CategoryDtoResponse>(createdResult.Value);
             Assert.NotNull(Value);
             Assert.Equal("man's clothes", Value.Name);
 

@@ -85,7 +85,8 @@ namespace Eshop.Api.Controllers
                 {
                     return BadRequest(ValidationResult.Errors);
                 }
-                return Ok(await _productService.CreateProductAsync(productDtoCreateRequest));
+                var product = await _productService.CreateProductAsync(productDtoCreateRequest);
+                return CreatedAtAction(nameof(GetOneProduct), new { id = product.Id }, product);
             }
             catch (Exception ex)
             {

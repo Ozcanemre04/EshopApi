@@ -245,8 +245,8 @@ namespace Eshop.Api.Test.Controllers
             // act
             var response = await _productController.CreateProduct(productCreate);
             // assert
-            var okResult = Assert.IsType<OkObjectResult>(response.Result);
-            var returnValue = Assert.IsType<ProductDtoResponse>(okResult.Value);
+            var createdResult = Assert.IsType<CreatedAtActionResult>(response.Result);
+            var returnValue = Assert.IsType<ProductDtoResponse>(createdResult.Value);
             Assert.NotNull(returnValue);
             Assert.Equal("iphone", returnValue.Name);
             Assert.Equal(159.56m, returnValue.Price);
